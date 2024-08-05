@@ -1,17 +1,17 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainPage from './pages/common/MainPage';
 import MainLayout from './components/common/Layout/MainLayout';
-import OwnerPage from './pages/deploy/OwnerPage';
+import OwnerPage from './pages/OwnerPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/SignupPage';
 import { AuthProvider } from './hooks/useAuth';
 import PrivateRoute from './pages/auth/PrivateRoute';
-import TemplatePage from './pages/deploy/TemplatePage';
+import TemplatePage from './pages/TemplatePage';
 import ConcertDeployPage from './pages/deploy/ConcertDeployPage';
-import PlayDetailPage from './pages/deploy/PlayDetailPage';
+import PlayDetailPage from './pages/PlayDetailPage';
 import PlayMonitorPage from './pages/deploy/PlayMonitorPage';
 import ServerMonitorPage from './pages/deploy/ServerMonitorPage';
-import PlayConfigurationPage from './pages/deploy/PlayConfigurationPage';
+import PlayConfigurationPage from './pages/PlayConfigurationPage';
 import PlayDetailTicketingPage from './pages/ticketing/PlayDetailTicketingPage';
 import PlayTicketingPage from './pages/ticketing/PlayTicketingPage';
 

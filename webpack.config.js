@@ -1,16 +1,17 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
   entry: './src/index.tsx',
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: 'auto',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.css'],
   },
   module: {
     rules: [
@@ -21,7 +22,17 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                namedExport: false,
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
@@ -38,6 +49,15 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),
+    new ModuleFederationPlugin({
+      name: 'deploy',
+      filename: 'remoteEntry.js',
+      remotes: {
+        auth: 'auth@http://localhost:3001/remoteEntry.js',
+      },
+      exposes: { },
+      shared: ['react', 'react-dom', 'react-router-dom', 'axios'],
+    }),
   ],
   devServer: {
     static: [
@@ -49,7 +69,7 @@ module.exports = {
       },
     ],
     compress: false,
-    port: 3000,
+    port: 3002,
     historyApiFallback: true,
   },
 };

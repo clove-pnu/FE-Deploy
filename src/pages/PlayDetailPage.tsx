@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
-import CategoryTitle from '../../components/common/CategoryTitle';
-import OwnerTab from '../../components/deploy/OwnerTab';
-import PlayDetail from '../../components/deploy/PlayDetail';
-import { DeployedPlayDetail } from '../../utils/type';
+import CategoryTitle from '../components/common/CategoryTitle';
+import OwnerTab from '../components/deploy/OwnerTab';
+import PlayDetail from '../components/deploy/PlayDetail';
+import { DeployedPlayDetail } from '../utils/type';
 
 const mockdata: DeployedPlayDetail = {
   pid: 0,

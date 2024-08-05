@@ -11,7 +11,6 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
-    'plugin:tailwindcss/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -81,5 +80,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'react/jsx-props-no-spreading': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
+    'import/no-unresolved': 'off',
   },
 };

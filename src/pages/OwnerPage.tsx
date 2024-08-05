@@ -1,5 +1,5 @@
-import DeployedPlayList from '../../components/deploy/DeployedPlayList';
-import LinkButton from '../../components/common/LinkButton';
+import DeployedPlayList from '../components/deploy/DeployedPlayList';
+import LinkButton from '../components/common/LinkButton';
 
 export default function OwnerPage() {
   return (

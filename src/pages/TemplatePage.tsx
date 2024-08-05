@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TemplateForm from '../../components/deploy/TemplateForm';
-import { concertTemplate } from '../../utils/template';
+import TemplateForm from '../components/deploy/TemplateForm';
+import { concertTemplate } from '../utils/template';
 
 export default function TemplatePage() {
   const [selectedTemplateType, setSelectedTemplateType] = useState<string>(concertTemplate.type);
