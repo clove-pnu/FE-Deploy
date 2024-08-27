@@ -12,8 +12,6 @@ const mockdata: DeployedPlayDetail = {
   bookingStartDate: new Date(2024, 6, 31),
   bookingEndDate: new Date(2024, 7, 5),
   status: '예매 중',
-  bookedSeatCount: 11000,
-  totalSeatCount: 20000,
 };
 
 export default function PlayDetailPage() {
@@ -33,8 +31,6 @@ export default function PlayDetailPage() {
         bookingStartDate={mockdata.bookingStartDate}
         bookingEndDate={mockdata.bookingEndDate}
         status={mockdata.status}
-        bookedSeatCount={mockdata.bookedSeatCount}
-        totalSeatCount={mockdata.totalSeatCount}
       />
     </main>
   );

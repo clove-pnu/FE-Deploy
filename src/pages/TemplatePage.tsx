@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TemplateForm from '../components/deploy/TemplateForm';
 import { concertTemplate } from '../utils/template';
+import CategoryTitle from '../components/common/CategoryTitle';
 
 export default function TemplatePage() {
   const [selectedTemplateType, setSelectedTemplateType] = useState<string>(concertTemplate.type);
@@ -15,14 +16,12 @@ export default function TemplatePage() {
 
   return (
     <main>
-      <div>
-        <h1 className="py-4 text-center text-3xl font-bold">공연 배포</h1>
-        <TemplateForm
-          selectedTemplateType={selectedTemplateType}
-          setSelectedTemplateType={setSelectedTemplateType}
-          handleSubmit={handleSubmit}
-        />
-      </div>
+      <CategoryTitle>공연 배포</CategoryTitle>
+      <TemplateForm
+        selectedTemplateType={selectedTemplateType}
+        setSelectedTemplateType={setSelectedTemplateType}
+        handleSubmit={handleSubmit}
+      />
     </main>
   );
 }

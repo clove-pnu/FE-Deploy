@@ -23,8 +23,6 @@ export interface DeployedPlayDetail {
   status: string;
   bookingStartDate: Date;
   bookingEndDate: Date;
-  bookedSeatCount: number;
-  totalSeatCount: number;
 }
 
 export interface Template {

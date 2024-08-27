@@ -1,6 +1,7 @@
 import { concertTemplate, exhibitionTemplate, sportsTemplate } from '../../utils/template';
 import Button from '../common/Button';
 import TemplateCard from './TemplateCard';
+import styles from '../styles/TemplateForm.module.css';
 
 interface TemplateOptionProps {
   selectedTemplateType: string;
@@ -15,10 +16,10 @@ export default function TemplateForm({
 }: TemplateOptionProps) {
   return (
     <form
-      className="flex flex-col gap-4"
+      className={styles.conatiner}
       onSubmit={handleSubmit}
     >
-      <div className="flex flex-col gap-6 py-4">
+      <div className={styles.cardList}>
         <div>
           <TemplateCard
             name={concertTemplate.name}
@@ -47,7 +48,7 @@ export default function TemplateForm({
           />
         </div>
       </div>
-      <div className="flex justify-end">
+      <div className={styles.buttonContainer}>
         <Button type="submit">
           다음
         </Button>

@@ -55,7 +55,11 @@ module.exports = {
       remotes: {
         auth: 'auth@http://localhost:3001/remoteEntry.js',
       },
-      exposes: { },
+      exposes: {
+        './OwnerPage': './src/pages/OwnerPage',
+        './PlayDetailPage': './src/pages/PlayDetailPage',
+        './TemplatePage': './src/pages/TemplatePage',
+      },
       shared: ['react', 'react-dom', 'react-router-dom', 'axios'],
     }),
   ],

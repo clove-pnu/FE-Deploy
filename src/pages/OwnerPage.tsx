@@ -1,16 +1,18 @@
 import DeployedPlayList from '../components/deploy/DeployedPlayList';
 import LinkButton from '../components/common/LinkButton';
+import CategoryTitle from '../components/common/CategoryTitle';
+import styles from './styles/OwnerPage.module.css';
 
 export default function OwnerPage() {
   return (
     <main>
       <div>
-        <h1 className="py-4 text-center text-3xl font-bold">공연 관리</h1>
+        <CategoryTitle>공연 관리</CategoryTitle>
         <DeployedPlayList deployedPlays={[
           {
             pid: 0,
             thumbnailUrl: '',
-            title: '테스트 공연',
+            title: '테스트 공연 1',
             playType: '콘서트',
             bookedSeatCount: 300,
             totalSeatCount: 1500,
@@ -20,7 +22,7 @@ export default function OwnerPage() {
           {
             pid: 1,
             thumbnailUrl: '',
-            title: '제목이 조금 긴 공연',
+            title: '테스트 공연 2',
             playType: '콘서트',
             bookedSeatCount: 2800,
             totalSeatCount: 3000,
@@ -29,7 +31,7 @@ export default function OwnerPage() {
           },
         ]}
         />
-        <div className="flex justify-end">
+        <div className={styles.buttonContainer}>
           <LinkButton to="./deploy">
             새 공연 배포하기
           </LinkButton>

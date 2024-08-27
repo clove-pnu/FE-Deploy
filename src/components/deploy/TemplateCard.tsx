@@ -1,4 +1,5 @@
 import { Template } from '../../utils/type';
+import styles from '../styles/TemplateCard.module.css';
 
 interface TemplateCardProps extends Template {
   selectedTemplateType: string;
@@ -18,8 +19,8 @@ export default function TemplateCard({
 
   return (
     <label
-      className={`flex flex-row gap-4 rounded-xl border-2 px-6 py-10
-        ${type === selectedTemplateType ? 'border-clove' : 'border-clove-light'}`}
+      className={styles.labelContainer}
+      style={{ borderColor: `${type === selectedTemplateType ? 'var(--color-blue)' : 'var(--color-lightblue)'}` }}
       htmlFor={type}
     >
       <input
@@ -30,8 +31,8 @@ export default function TemplateCard({
         checked={type === selectedTemplateType}
         onChange={handleChange}
       />
-      <div className="flex flex-row items-center gap-24">
-        <div className="text-2xl font-bold">{name}</div>
+      <div className={styles.label}>
+        <div className={styles.name}>{name}</div>
         <div>{description}</div>
       </div>
     </label>

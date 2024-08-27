@@ -1,3 +1,5 @@
+import styles from '../styles/TextInput.module.css';
+
 interface TextInputProps {
   name: string;
   value: string;
@@ -14,15 +16,15 @@ export default function TextInput({
   secret = false,
 }: TextInputProps) {
   return (
-    <div className="flex flex-row items-center gap-2 border-b-2 border-black py-2">
+    <div className={styles.container}>
       <label
-        className="px-2 font-bold"
+        className={styles.label}
         htmlFor={name}
       >
         {name}
       </label>
       <input
-        className="grow px-2 py-1 focus:outline-none"
+        className={styles.input}
         type={secret ? 'password' : 'text'}
         name={name}
         id={name}

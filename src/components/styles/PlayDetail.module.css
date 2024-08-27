@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 1.5rem;
+}
+
+.thumbnail {
+  height: 16rem;
+  width: 12rem;
+  background-color: var(--color-blue);
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.titleDeployDate {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.deployDate {
+  color: var(--color-gray);
+}
+
+.bookingDate {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: end;
+  justify-content: space-between;
+  padding: 1rem 0;
+}

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { DeployedPlay } from '../../utils/type';
+import styles from '../styles/DeployedPlayCard.module.css';
 
 export default function DeployedPlayCard({
   pid,
@@ -12,25 +13,25 @@ export default function DeployedPlayCard({
   deployDate,
 }: DeployedPlay) {
   return (
-    <div className="flex flex-row items-center gap-12 p-4">
-      <img className="h-40 w-28 bg-clove" src={thumbnailUrl} alt={`${title} 썸네일`} />
-      <div className="flex grow flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-6">
+    <div className={styles.container}>
+      <img className={styles.thumbnail} src={thumbnailUrl} alt={`${title} 썸네일`} />
+      <div className={styles.content}>
+        <div className={styles.left}>
           <Link to={`./playDetail/${pid}`}>
-            <h2 className="text-xl font-bold">{title}</h2>
+            <h2 className={styles.title}>{title}</h2>
           </Link>
-          <div className="text-sm text-gray-700">{playType}</div>
+          <div className={styles.playType}>{playType}</div>
         </div>
-        <div className="flex flex-row gap-16">
-          <div className="flex flex-row gap-2">
-            <p>예매 좌석 수</p>
-            <p className="font-bold">{bookedSeatCount}</p>
-            <p>/</p>
-            <p>전체 좌석 수</p>
-            <p className="font-bold">{totalSeatCount}</p>
+        <div className={styles.right}>
+          <div className={styles.seat}>
+            <span>예매 좌석 수</span>
+            <span className={styles.bold}>{bookedSeatCount}</span>
+            <span>/</span>
+            <span>전체 좌석 수</span>
+            <span className={styles.bold}>{totalSeatCount}</span>
           </div>
-          <div className="font-bold">{status}</div>
-          <div className="w-24 text-gray-700">{deployDate.toLocaleDateString()}</div>
+          <div className={styles.bold}>{status}</div>
+          <div className={styles.date}>{deployDate.toLocaleDateString()}</div>
         </div>
       </div>
     </div>

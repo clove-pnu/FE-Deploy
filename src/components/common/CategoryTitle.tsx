@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
+import styles from '../styles/CategoryTitle.module.css';
 
 export default function CategoryTitle({ children }: { children: ReactNode }) {
   return (
-    <h1 className="py-4 text-center text-3xl font-bold">
+    <h1 className={styles.title}>
       {children}
     </h1>
   );
