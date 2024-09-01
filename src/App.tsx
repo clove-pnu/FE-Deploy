@@ -1,14 +1,10 @@
-import React, { Suspense } from 'react';
-
-const RemoteButton = React.lazy(() => import('remoteApp/Button'));
+import { BrowserRouter } from 'react-router-dom';
+import TemplatePage from './pages/TemplatePage';
 
 export default function App() {
   return (
-    <div>
-      Hello, world!
-      <Suspense fallback={<div>Loading...</div>}>
-        <RemoteButton />
-      </Suspense>
-    </div>
+    <BrowserRouter>
+      <TemplatePage />
+    </BrowserRouter>
   );
 }

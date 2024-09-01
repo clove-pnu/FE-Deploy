@@ -1,0 +1,60 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+  padding: 1rem;
+}
+
+.thumbnail {
+  height: 10rem;
+  width: 7rem;
+  background-color: var(--color-blue);
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.playType {
+  font-size: 0.875rem;
+  color: var(--color-gray);
+}
+
+.right {
+  display: flex;
+  flex-direction: row;
+  gap: 4rem;
+}
+
+.seat {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.date {
+  width: 6rem;
+  color: var(--color-gray);
+}
