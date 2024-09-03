@@ -8,7 +8,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: 'auto',
+    publicPath: '/page/deploy/',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.css'],
@@ -53,7 +53,7 @@ module.exports = {
       name: 'deploy',
       filename: 'remoteEntry.js',
       remotes: {
-        auth: 'auth@http://localhost:3001/remoteEntry.js',
+        auth: 'auth@http://34.47.117.26/page/auth/remoteEntry.js',
       },
       exposes: {
         './OwnerPage': './src/pages/OwnerPage',
