@@ -7,6 +7,8 @@ import UploadThumbnailImage from './UploadThumbnailImage';
 import UploadDescriptionImage from './UploadDescriptionImage';
 import AddEventDate from './AddEventDate';
 import VenueAndPrice from './VenueAndPrice';
+import { fetchWithHandler } from '../../utils/fetchWithHandler';
+import { createNamespace } from '../../apis/deploy';
 
 export default function DeployConcertForm() {
   const [thumbnailImage, setThumbnailImage] = useState<Blob>(null);
@@ -23,7 +25,14 @@ export default function DeployConcertForm() {
   const [venueSection, setVenueSection] = useState(['R', 'S', 'A']);
 
   const handleDeploy = () => {
-
+    fetchWithHandler(() => createNamespace({ namespace: title }), {
+      onSuccess: (response) => {
+        console.log(response);
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });
   };
 
   return (

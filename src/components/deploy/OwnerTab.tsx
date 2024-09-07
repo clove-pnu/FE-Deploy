@@ -17,7 +17,7 @@ export default function OwnerTab({
         style={{ borderBottom: `${current === 'PlayDetail' ? '2px solid black' : ''}` }}
         to={`/owner/playDetail/${pid}`}
       >
-        공연 정보
+        공연 상세 정보
       </Link>
       <Link
         className={styles.tab}
