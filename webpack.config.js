@@ -8,7 +8,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/page/deploy/',
+    publicPath: 'auto',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.css'],
@@ -53,21 +53,24 @@ module.exports = {
       name: 'deploy',
       filename: 'remoteEntry.js',
       remotes: {
-        auth: 'auth@http://34.47.117.26/page/auth/remoteEntry.js',
+        auth: 'auth@http://localhost:3001/remoteEntry.js',
+        monitor: 'monitor@http://localhost:3006/remoteEntry.js',
+        // When Build
+        // auth: 'auth@http://34.47.117.26/page/auth/remoteEntry.js',
+        // monitor: 'monitor@http://34.47.117.26/page/monitor/remoteEntry.js',
       },
       exposes: {
         './OwnerPage': './src/pages/OwnerPage',
         './PlayDetailPage': './src/pages/PlayDetailPage',
         './TemplatePage': './src/pages/TemplatePage',
+        './DeployConcertPage': './src/pages/DeployConcertPage',
+        './ServerMonitorPage': './src/pages/ServerMonitorPage',
       },
       shared: ['react', 'react-dom', 'react-router-dom', 'axios'],
     }),
   ],
   devServer: {
     static: [
-      {
-        directory: path.join(__dirname, 'public'),
-      },
       {
         directory: path.join(__dirname, 'dist'),
       },
