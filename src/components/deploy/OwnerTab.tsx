@@ -38,7 +38,7 @@ export default function OwnerTab({
         style={{ borderBottom: `${current === 'PlayConfiguration' ? '2px solid black' : ''}` }}
         to={`/owner/playConfiguration/${pid}`}
       >
-        공연 설정
+        공연 수정
       </Link>
     </div>
   );

@@ -65,6 +65,7 @@ module.exports = {
         './TemplatePage': './src/pages/TemplatePage',
         './DeployConcertPage': './src/pages/DeployConcertPage',
         './ServerMonitorPage': './src/pages/ServerMonitorPage',
+        './PlayConfigurationPage': './src/pages/PlayConfigurationPage',
       },
       shared: ['react', 'react-dom', 'react-router-dom', 'axios'],
     }),

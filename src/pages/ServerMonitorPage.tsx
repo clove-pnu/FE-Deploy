@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import CategoryTitle from '../components/common/CategoryTitle';
 import OwnerTab from '../components/deploy/OwnerTab';
 import DashboardWrapper from '../remotes/DashboardWrapper';
-import styles from './styles/ServerMonitorPage.module.css';
 
 export default function ServerMonitorPage() {
   const { pid } = useParams();

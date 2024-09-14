@@ -1,57 +1,110 @@
-import { DeployedPlayDetail } from '../../utils/type';
+import { useEffect, useState } from 'react';
 import styles from '../styles/PlayDetail.module.css';
+import { fetchWithHandler } from '../../utils/fetchWithHandler';
+import { getEvent } from '../../apis/event';
 
-export default function PlayDetail({
-  pid,
-  thumbnailUrl,
-  title,
-  deployDate,
-  bookingStartDate,
-  bookingEndDate,
-  status,
-}: DeployedPlayDetail) {
+interface PlayDetailProps {
+  playName: string;
+}
+
+export default function PlayDetail({ playName }: PlayDetailProps) {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetchWithHandler(() => getEvent(playName), {
+      onSuccess: (response) => {
+        setData(response.data);
+      },
+      onError: () => {
+
+      },
+    });
+  });
+
   return (
     <div className={styles.container}>
       <img
         className={styles.thumbnail}
-        src={thumbnailUrl}
-        alt={`${title} 썸네일`}
+        src={data?.image}
+        alt={`${playName} 썸네일`}
       />
-      <div className={styles.left}>
-        <div className={styles.titleDeployDate}>
-          <h2 className={styles.title}>{title}</h2>
-          <p className={styles.deployDate}>{deployDate.toLocaleDateString()}</p>
-        </div>
-        <div className={styles.bookingDate}>
-          <p>
-            예매 시작일:
-            {' '}
-            {bookingStartDate.toLocaleDateString()}
-          </p>
-          <p>
-            예매 종료일:
-            {' '}
-            {bookingEndDate.toLocaleDateString()}
-          </p>
-        </div>
-      </div>
-      <div className={styles.right}>
-        <p>{status}</p>
-        <div className="flex w-80 flex-col items-end gap-2">
-          {/* <div className="flex w-full flex-row justify-between px-2">
-            <p>예매 현황</p>
+      <div className={styles.contentContainer}>
+        <div className={styles.left}>
+          <div className={styles.titleDate}>
+            <h1 className={styles.title}>{playName}</h1>
+            <div className={styles.date}>
+              <p>
+                {data?.startDate}
+                {' '}
+                ~
+                {' '}
+                {data?.endDate}
+              </p>
+            </div>
+          </div>
+          <div className={styles.venueCast}>
+            <p>{data?.venue}</p>
             <p>
-              {NumberToMoney(bookedSeatCount)}
+              출연진:
               {' '}
-              /
-              {' '}
-              {NumberToMoney(totalSeatCount)}
+              {data?.cast}
             </p>
           </div>
-          <ProgressBar
-            current={bookedSeatCount}
-            total={totalSeatCount}
-          /> */}
+          <div>
+            <div className={styles.eventTimeTitle}>회차정보</div>
+            <ul>
+              {/* {data.eventTime.map((evt, index) => (
+                <li
+                  key={evt.toString()}
+                  className={styles.eventTime}
+                >
+                  {index + 1}
+                  회차:
+                  {' '}
+                  {evt}
+                </li>
+              ))} */}
+              {data?.eventTime}
+            </ul>
+          </div>
+        </div>
+        <div className={styles.middle}>
+          <div>
+            <div className={styles.priceTitle}>좌석 별 가격</div>
+            <ul>
+              {data?.seatsAndPrices.map(({ id: sectionId, section, price }) => (
+                <li
+                  key={sectionId}
+                  className={styles.price}
+                >
+                  {section}
+                  {' '}
+                  구역:
+                  {' '}
+                  {price}
+                  {' '}
+                  원
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className={styles.right}>
+          <div className={styles.status}>
+            예매 중
+          </div>
+          <div className={styles.bookingDate}>
+            <p>
+              예매 시작일:
+              {' '}
+              {data?.bookingStartDate}
+            </p>
+            <p>
+              예매 종료일:
+              {' '}
+              {data?.bookingEndDate}
+            </p>
+          </div>
         </div>
       </div>
     </div>
