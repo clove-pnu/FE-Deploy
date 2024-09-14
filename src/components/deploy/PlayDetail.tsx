@@ -19,7 +19,7 @@ export default function PlayDetail({ playName }: PlayDetailProps) {
 
       },
     });
-  });
+  }, []);
 
   return (
     <div className={styles.container}>
