@@ -9,25 +9,20 @@ export default function DeployedPlayList({ deployedPlays }: DeployedPlayListProp
   return (
     <ul>
       {deployedPlays.map(({
-        pid,
-        thumbnailUrl,
-        title,
-        playType,
-        bookedSeatCount,
-        totalSeatCount,
-        status,
-        deployDate,
+        id,
+        image,
+        name,
+        bookingStartDate,
+        bookingEndDate,
       }) => (
-        <li key={pid}>
+        <li key={id}>
           <DeployedPlayCard
-            pid={pid}
-            thumbnailUrl={thumbnailUrl}
-            title={title}
-            playType={playType}
-            bookedSeatCount={bookedSeatCount}
-            totalSeatCount={totalSeatCount}
-            status={status}
-            deployDate={deployDate}
+            id={id}
+            image={image}
+            name={name}
+            bookingStartDate={bookingStartDate}
+            bookingEndDate={bookingEndDate}
+            status="예매중"
           />
         </li>
       ))}

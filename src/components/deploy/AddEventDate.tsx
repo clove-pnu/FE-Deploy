@@ -13,7 +13,7 @@ export default function AddEventDate({ eventDate, setEventDate }: AddEventDatePr
   const handleAddEventDate = () => {
     if (addEventDate !== '' && eventDate.find((e) => e === addEventDate) === undefined) {
       const dateString = addEventDate.replace('T', ' ');
-      setEventDate((prev) => [...prev, dateString]);
+      setEventDate((prev) => [...prev, dateString].sort((a, b) => new Date(a.replace(' ', 'T')).getTime() - new Date(b.replace(' ', 'T')).getTime()));
       setAddEventDate('');
     }
   };
@@ -43,6 +43,11 @@ export default function AddEventDate({ eventDate, setEventDate }: AddEventDatePr
             key={event}
             className={styles.eventDate}
           >
+            <div>
+              {index + 1}
+              {' '}
+              회차
+            </div>
             <div>{event}</div>
             <button
               type="button"

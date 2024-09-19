@@ -4,16 +4,16 @@ import OwnerTab from '../components/deploy/OwnerTab';
 import PlayConfigurationForm from '../components/deploy/PlayConfigurationForm';
 
 export default function PlayConfigurationPage() {
-  const { pid } = useParams();
+  const { playName } = useParams();
 
   return (
     <main>
       <CategoryTitle>공연 수정</CategoryTitle>
       <OwnerTab
-        pid={Number(pid)}
+        playName={playName}
         current="PlayConfiguration"
       />
-      <PlayConfigurationForm playName="name1" />
+      <PlayConfigurationForm playName={playName} />
     </main>
   );
 }

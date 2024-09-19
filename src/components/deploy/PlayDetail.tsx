@@ -15,11 +15,17 @@ export default function PlayDetail({ playName }: PlayDetailProps) {
       onSuccess: (response) => {
         setData(response.data);
       },
-      onError: () => {
-
-      },
+      onError: () => {},
     });
-  }, []);
+  }, [playName]);
+
+  if (!data) {
+    return (
+      <div>
+        잘못된 접근입니다.
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -53,7 +59,7 @@ export default function PlayDetail({ playName }: PlayDetailProps) {
           <div>
             <div className={styles.eventTimeTitle}>회차정보</div>
             <ul>
-              {/* {data.eventTime.map((evt, index) => (
+              {data?.eventTime.map((evt, index) => (
                 <li
                   key={evt.toString()}
                   className={styles.eventTime}
@@ -63,8 +69,7 @@ export default function PlayDetail({ playName }: PlayDetailProps) {
                   {' '}
                   {evt}
                 </li>
-              ))} */}
-              {data?.eventTime}
+              ))}
             </ul>
           </div>
         </div>

@@ -5,14 +5,12 @@ export interface LoginResponse {
 }
 
 export interface DeployedPlay {
-  pid: number;
-  thumbnailUrl: string;
-  title: string;
-  playType: string;
-  bookedSeatCount: number;
-  totalSeatCount: number;
+  id: number;
+  image: string;
+  name: string;
   status: string;
-  deployDate: Date;
+  bookingStartDate: string;
+  bookingEndDate: string;
 }
 
 export interface DeployedPlayDetail {

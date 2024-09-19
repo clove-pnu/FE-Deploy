@@ -4,17 +4,17 @@ import OwnerTab from '../components/deploy/OwnerTab';
 import DashboardWrapper from '../remotes/DashboardWrapper';
 
 export default function PlayMonitorPage() {
-  const { pid } = useParams();
+  const { playName } = useParams();
   return (
     <main>
       <CategoryTitle>예매 현황 모니터링</CategoryTitle>
       <OwnerTab
-        pid={Number(pid)}
+        playName={playName}
         current="PlayMonitor"
       />
       <DashboardWrapper
         title="CPU 사용량"
-        pid={Number(pid)}
+        pid={0}
       />
     </main>
   );

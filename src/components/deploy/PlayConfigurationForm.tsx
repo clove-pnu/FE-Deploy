@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import Label from '../common/Label';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import UploadDescriptionImage from './UploadDescriptionImage';
 import AddEventDate from './AddEventDate';
-import VenueAndPrice from './VenueAndPrice';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { getEvent } from '../../apis/event';
 import styles from '../styles/PlayConfigurationForm.module.css';
@@ -26,14 +24,12 @@ export default function PlayConfigurationForm({ playName }: PlayConfigurationFor
       onSuccess: (response) => {
         setData(response.data);
         setCast(response.data.cast);
-        setEventDate([response.data.eventTime]);
+        setEventDate([...response.data.eventTime]);
         setBookingStartDate(response.data.bookingStartDate);
         setBookingEndDate(response.data.bookingEndDate);
-        setDescription(response.data.description.text);
+        setDescription(response.data.description.text.join('\n'));
       },
-      onError: () => {
-
-      },
+      onError: () => {},
     });
   }, []);
 

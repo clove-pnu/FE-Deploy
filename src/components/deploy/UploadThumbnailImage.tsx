@@ -49,7 +49,7 @@ export default function UploadThumbnailImage({ setImage }: UploadThumbnailImageP
           id="thumbnailInput"
           onChange={handleUploadImage}
           className={styles.input}
-          accept="image/jpeg, image/png, image/webp"
+          accept="image/jpeg, image/png, image/webp, image/gif"
         />
       </label>
     </div>
