@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { validImageSize, validImageType } from '../../utils/image';
 import styles from '../styles/UploadDescriptionImage.module.css';
+import { Image } from '../../utils/type';
 
 interface UploadDescriptionImageProps {
-  setImage: React.Dispatch<React.SetStateAction<Blob>>;
+  setImage: React.Dispatch<React.SetStateAction<Image>>;
 }
 
 export default function UploadDescriptionImage({ setImage }: UploadDescriptionImageProps) {
@@ -23,7 +24,10 @@ export default function UploadDescriptionImage({ setImage }: UploadDescriptionIm
 
       const url = URL.createObjectURL(fileList[0]);
 
-      setImage(fileList[0]);
+      setImage({
+        data: fileList[0],
+        ext: fileList[0].type.split('/')[1],
+      });
       setImageURL(url);
     }
   };

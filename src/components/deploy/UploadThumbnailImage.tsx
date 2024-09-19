@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { validImageSize, validImageType } from '../../utils/image';
 import styles from '../styles/UploadThumbnailImage.module.css';
+import { Image } from '../../utils/type';
 
 interface UploadThumbnailImageProps {
-  setImage: React.Dispatch<React.SetStateAction<Blob>>;
+  setImage: React.Dispatch<React.SetStateAction<Image>>;
 }
 
 export default function UploadThumbnailImage({ setImage }: UploadThumbnailImageProps) {
@@ -24,7 +25,10 @@ export default function UploadThumbnailImage({ setImage }: UploadThumbnailImageP
 
       const url = URL.createObjectURL(fileList[0]);
 
-      setImage(fileList[0]);
+      setImage({
+        data: fileList[0],
+        ext: fileList[0].type.split('/')[1],
+      });
       setImageURL(url);
     }
   };

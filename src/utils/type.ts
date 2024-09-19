@@ -28,3 +28,8 @@ export interface Template {
   type: string;
   description: string;
 }
+
+export interface Image {
+  data: Blob;
+  ext: string;
+}

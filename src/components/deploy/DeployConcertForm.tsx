@@ -10,9 +10,10 @@ import VenueAndPrice from './VenueAndPrice';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { deployEvent } from '../../apis/event';
 import { getJson } from '../../apis/json';
+import { Image } from '../../utils/type';
 
 export default function DeployConcertForm() {
-  const [thumbnailImage, setThumbnailImage] = useState<Blob>(null);
+  const [thumbnailImage, setThumbnailImage] = useState<Image>(null);
   const [title, setTitle] = useState('');
   const [namespace, setNamespace] = useState('');
   const [cast, setCast] = useState('');
@@ -22,7 +23,7 @@ export default function DeployConcertForm() {
   const [bookingStartDate, setBookingStartDate] = useState<string>('');
   const [bookingEndDate, setBookingEndDate] = useState<string>('');
   const [description, setDescription] = useState('');
-  const [descriptionImage, setDesctiptionImage] = useState<Blob>(null);
+  const [descriptionImage, setDesctiptionImage] = useState<Image>(null);
 
   const [venueSection, setVenueSection] = useState(['R', 'S', 'A']);
   const [jsonFile, setJsonFile] = useState<Blob>(null);
@@ -72,14 +73,10 @@ export default function DeployConcertForm() {
       seatsAndPrices: seatsAndPriceData,
     };
 
-    const thumbnailImageData = thumbnailImage;
-    const jsonData = jsonFile;
-    const descriptionImageData = descriptionImage;
-
     formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
-    formData.append('image', thumbnailImageData, 'thumbnail.gif');
-    formData.append('jsonFileUrl', jsonData, 'data.json');
-    formData.append('descriptionImage', descriptionImageData, 'description.gif');
+    formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
+    formData.append('jsonFileUrl', jsonFile, 'data.json');
+    formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
 
     fetchWithHandler(() => deployEvent(formData), {
       onSuccess: (response) => {
@@ -95,9 +92,7 @@ export default function DeployConcertForm() {
 
   return (
     <form className={styles.container}>
-      <UploadThumbnailImage
-        setImage={setThumbnailImage}
-      />
+      <UploadThumbnailImage setImage={setThumbnailImage} />
       <Label name="공연 제목">
         <Input
           type="text"
@@ -157,9 +152,7 @@ export default function DeployConcertForm() {
           setValue={setDescription}
         />
       </Label>
-      <UploadDescriptionImage
-        setImage={setDesctiptionImage}
-      />
+      <UploadDescriptionImage setImage={setDesctiptionImage} />
       <Button onClick={handleDeploy}>배포하기</Button>
     </form>
   );
