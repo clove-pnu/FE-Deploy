@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from '../styles/PlayDetail.module.css';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { getEvent } from '../../apis/event';
+import { NumberToMoney } from '../../utils/convert';
 
 interface PlayDetailProps {
   playName: string;
@@ -34,35 +35,39 @@ export default function PlayDetail({ playName }: PlayDetailProps) {
         src={data?.image}
         alt={`${playName} 썸네일`}
       />
-      <div className={styles.contentContainer}>
-        <div className={styles.left}>
-          <div className={styles.titleDate}>
-            <h1 className={styles.title}>{playName}</h1>
-            <div className={styles.date}>
-              <p>
-                {data?.startDate}
-                {' '}
-                ~
-                {' '}
-                {data?.endDate}
-              </p>
+      <div className={styles.detailContainer}>
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>공연 이름</div>
+          <div>{playName}</div>
+        </div>
+        <div className={styles.wrapper}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>출연진</div>
+            <div>{data?.cast}</div>
+          </div>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>공연 장소</div>
+            <div>{data?.venue}</div>
+          </div>
+        </div>
+        <div className={styles.wrapper}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>공연 기간</div>
+            <div>
+              {data?.startDate}
+              {' '}
+              ~
+              {' '}
+              {data?.endDate}
             </div>
           </div>
-          <div className={styles.venueCast}>
-            <p>{data?.venue}</p>
-            <p>
-              출연진:
-              {' '}
-              {data?.cast}
-            </p>
-          </div>
-          <div>
-            <div className={styles.eventTimeTitle}>회차정보</div>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>회차 정보</div>
             <ul>
               {data?.eventTime.map((evt, index) => (
                 <li
                   key={evt.toString()}
-                  className={styles.eventTime}
+                  className={styles.list}
                 >
                   {index + 1}
                   회차:
@@ -73,42 +78,35 @@ export default function PlayDetail({ playName }: PlayDetailProps) {
             </ul>
           </div>
         </div>
-        <div className={styles.middle}>
-          <div>
-            <div className={styles.priceTitle}>좌석 별 가격</div>
+        <div className={styles.wrapper}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>좌석 별 가격 정보</div>
             <ul>
               {data?.seatsAndPrices.map(({ id: sectionId, section, price }) => (
                 <li
                   key={sectionId}
-                  className={styles.price}
+                  className={styles.list}
                 >
                   {section}
                   {' '}
                   구역:
                   {' '}
-                  {price}
+                  {NumberToMoney(price)}
                   {' '}
                   원
                 </li>
               ))}
             </ul>
           </div>
-        </div>
-        <div className={styles.right}>
-          <div className={styles.status}>
-            예매 중
-          </div>
-          <div className={styles.bookingDate}>
-            <p>
-              예매 시작일:
-              {' '}
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>예매 기간</div>
+            <div>
               {data?.bookingStartDate}
-            </p>
-            <p>
-              예매 종료일:
+              {' '}
+              ~
               {' '}
               {data?.bookingEndDate}
-            </p>
+            </div>
           </div>
         </div>
       </div>

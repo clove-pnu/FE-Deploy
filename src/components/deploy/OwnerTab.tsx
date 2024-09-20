@@ -13,29 +13,25 @@ export default function OwnerTab({
   return (
     <div className={styles.container}>
       <Link
-        className={styles.tab}
-        style={{ borderBottom: `${current === 'PlayDetail' ? '2px solid black' : ''}` }}
+        className={`${styles.tab} ${current === 'PlayDetail' && styles.current}`}
         to={`/owner/playDetail/${playName}`}
       >
         공연 상세 정보
       </Link>
       <Link
-        className={styles.tab}
-        style={{ borderBottom: `${current === 'PlayMonitor' ? '2px solid black' : ''}` }}
+        className={`${styles.tab} ${current === 'PlayMonitor' && styles.current}`}
         to={`/owner/playMonitor/${playName}`}
       >
         예매 현황 모니터링
       </Link>
       <Link
-        className={styles.tab}
-        style={{ borderBottom: `${current === 'ServerMonitor' ? '2px solid black' : ''}` }}
+        className={`${styles.tab} ${current === 'ServerMonitor' && styles.current}`}
         to={`/owner/serverMonitor/${playName}`}
       >
         공연 서버 모니터링
       </Link>
       <Link
-        className={styles.tab}
-        style={{ borderBottom: `${current === 'PlayConfiguration' ? '2px solid black' : ''}` }}
+        className={`${styles.tab} ${current === 'PlayConfiguration' && styles.current}`}
         to={`/owner/playConfiguration/${playName}`}
       >
         공연 수정

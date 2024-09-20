@@ -20,7 +20,7 @@ export default function DeployedPlayCard({
           </Link>
         </div>
         <div className={styles.right}>
-          <div>
+          <div className={styles.bookingDate}>
             <div>예매 기간</div>
             <div>
               <span>{bookingStartDate}</span>

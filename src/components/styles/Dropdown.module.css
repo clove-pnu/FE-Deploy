@@ -19,6 +19,7 @@
   width: 100%;
   border: none;
   padding: 0.5rem 1rem;
+  background: #fff;
 }
 
 .selected:hover,

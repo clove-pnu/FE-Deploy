@@ -7,11 +7,11 @@ export default function PlayDetailPage() {
   const { playName } = useParams();
   return (
     <main>
-      <CategoryTitle>공연 상세 정보</CategoryTitle>
       <OwnerTab
         playName={playName}
         current="PlayDetail"
       />
+      <CategoryTitle>공연 상세 정보</CategoryTitle>
       <PlayDetail playName={playName} />
     </main>
   );

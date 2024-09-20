@@ -7,11 +7,11 @@ export default function PlayMonitorPage() {
   const { playName } = useParams();
   return (
     <main>
-      <CategoryTitle>예매 현황 모니터링</CategoryTitle>
       <OwnerTab
         playName={playName}
         current="PlayMonitor"
       />
+      <CategoryTitle>예매 현황 모니터링</CategoryTitle>
       <DashboardWrapper
         title="CPU 사용량"
         pid={0}

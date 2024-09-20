@@ -8,11 +8,11 @@ export default function PlayConfigurationPage() {
 
   return (
     <main>
-      <CategoryTitle>공연 수정</CategoryTitle>
       <OwnerTab
         playName={playName}
         current="PlayConfiguration"
       />
+      <CategoryTitle>공연 수정</CategoryTitle>
       <PlayConfigurationForm playName={playName} />
     </main>
   );

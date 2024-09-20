@@ -7,11 +7,11 @@ export default function ServerMonitorPage() {
   const { playName } = useParams();
   return (
     <main>
-      <CategoryTitle>공연 서버 모니터링</CategoryTitle>
       <OwnerTab
         playName={playName}
         current="ServerMonitor"
       />
+      <CategoryTitle>공연 서버 모니터링</CategoryTitle>
       <DashboardWrapper
         title="CPU 사용량"
         pid={0}
