@@ -10,4 +10,4 @@ declare module 'auth/reissue' {
   export function reissue(params: { accessToken: string }): Promise<AxiosResponse<LoginResponse>>
 }
 
-declare module 'monitor/Dashboard';
+declare module 'monitor/Monitor';

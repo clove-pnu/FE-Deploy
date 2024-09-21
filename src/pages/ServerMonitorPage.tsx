@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import CategoryTitle from '../components/common/CategoryTitle';
 import OwnerTab from '../components/deploy/OwnerTab';
-import DashboardWrapper from '../remotes/DashboardWrapper';
+import MonitorController from '../components/deploy/MonitorController';
 
 export default function ServerMonitorPage() {
   const { playName } = useParams();
@@ -12,10 +12,7 @@ export default function ServerMonitorPage() {
         current="ServerMonitor"
       />
       <CategoryTitle>공연 서버 모니터링</CategoryTitle>
-      <DashboardWrapper
-        title="CPU 사용량"
-        pid={0}
-      />
+      <MonitorController namespace="default" />
     </main>
   );
 }

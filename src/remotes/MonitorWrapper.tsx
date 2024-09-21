@@ -3,17 +3,17 @@ import {
 } from 'react';
 
 interface Props {
-  title: string;
-  pid: number;
+  namespace: string;
+  enableSlices: boolean;
 }
 
 interface State {
   hasError: boolean;
 }
 
-const Dashboard = lazy(() => import('monitor/Dashboard'));
+const Monitor = lazy(() => import('monitor/Monitor'));
 
-class DashboardWrapper extends Component<Props, State> {
+class MonitorWrapper extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
@@ -34,17 +34,17 @@ class DashboardWrapper extends Component<Props, State> {
       );
     }
 
-    const { title, pid } = this.props;
+    const { namespace, enableSlices } = this.props;
 
     return (
       <Suspense fallback={<div>Loading...</div>}>
-        <Dashboard
-          title={title}
-          pid={pid}
+        <Monitor
+          namespace={namespace}
+          enableSlices={enableSlices}
         />
       </Suspense>
     );
   }
 }
 
-export default DashboardWrapper;
+export default MonitorWrapper;
