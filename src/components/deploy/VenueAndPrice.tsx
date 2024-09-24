@@ -1,19 +1,20 @@
+import { Venue } from '../../utils/type';
 import Dropdown from '../common/Dropdown';
 import Label from '../common/Label';
 import styles from '../styles/VenueAndPrice.module.css';
 
 interface VenueAndPriceProps {
-  venue: string;
-  setVenue: React.Dispatch<React.SetStateAction<string>>;
-  venueSection: string[];
+  selectedVenue: string;
+  setSelectedVenue: React.Dispatch<React.SetStateAction<string>>;
+  venues: Venue[];
   price: Map<string, string>;
   setPrice: React.Dispatch<React.SetStateAction<Map<string, string>>>;
 }
 
 export default function VenueAndPrice({
-  venue,
-  setVenue,
-  venueSection,
+  selectedVenue,
+  setSelectedVenue,
+  venues,
   price,
   setPrice,
 }: VenueAndPriceProps) {
@@ -21,41 +22,47 @@ export default function VenueAndPrice({
     <>
       <Label name="공연 장소">
         <Dropdown
-          options={['장소 1', '장소 2', '장소 3']}
-          selectedOption={venue}
-          setSelectedOption={setVenue}
+          options={venues.map(({ name }) => name)}
+          selectedOption={selectedVenue}
+          setSelectedOption={setSelectedVenue}
         />
       </Label>
-      {venue !== '' && (
+      {selectedVenue !== '' && (
         <div>
           <div className={styles.priceLabel}>구역 별 가격</div>
           <div className={styles.priceContainer}>
-            <div className={styles.venueImage} />
+            <img
+              className={styles.venueImage}
+              src={venues.find((v) => v.name === selectedVenue)?.backgroundImage}
+              alt="공연장 좌석 배치도"
+            />
             <div className={styles.venuePrice}>
-              {venueSection.map((section) => (
-                <Label
-                  name={`${section} 구역`}
-                  unit="원"
-                  key={section}
-                >
-                  <input
-                    className={styles.input}
-                    type="text"
-                    name={`${section} 구역`}
-                    id={`${section} 구역`}
-                    value={price.get(section) || ''}
-                    onChange={(e) => {
-                      if (/^[0-9]*$/g.test(e.target.value)) {
-                        setPrice((prev) => {
-                          const newMap = new Map(prev);
-                          newMap.set(section, e.target.value);
-                          return newMap;
-                        });
-                      }
-                    }}
-                  />
-                </Label>
-              ))}
+              {venues.find((v) => v.name === selectedVenue)
+                ?.sections
+                .map(({ sectionName }) => (
+                  <Label
+                    name={`${sectionName} 구역`}
+                    unit="원"
+                    key={sectionName}
+                  >
+                    <input
+                      className={styles.input}
+                      type="text"
+                      name={`${sectionName} 구역`}
+                      id={`${sectionName} 구역`}
+                      value={price.get(sectionName) || ''}
+                      onChange={(e) => {
+                        if (/^[0-9]*$/g.test(e.target.value)) {
+                          setPrice((prev) => {
+                            const newMap = new Map(prev);
+                            newMap.set(sectionName, e.target.value);
+                            return newMap;
+                          });
+                        }
+                      }}
+                    />
+                  </Label>
+                ))}
             </div>
           </div>
         </div>
