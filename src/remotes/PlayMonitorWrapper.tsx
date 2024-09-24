@@ -3,21 +3,22 @@ import {
 } from 'react';
 
 interface Props {
-  namespace: string;
-  enableSlices: boolean;
-  autoRefresh: boolean;
-  start: number;
-  end: number;
-  step: string;
+  totalSeatCount: number;
+  reservedSeatCount: number;
+  sectionData: {
+    section: string;
+    data: number;
+  }[];
+  dateData: [string, number][];
 }
 
 interface State {
   hasError: boolean;
 }
 
-const Monitor = lazy(() => import('monitor/Monitor'));
+const PlayMonitor = lazy(() => import('monitor/PlayMonitor'));
 
-class MonitorWrapper extends Component<Props, State> {
+class PlayMonitorWrapper extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
@@ -39,27 +40,23 @@ class MonitorWrapper extends Component<Props, State> {
     }
 
     const {
-      namespace,
-      enableSlices,
-      autoRefresh,
-      start,
-      end,
-      step,
+      totalSeatCount,
+      reservedSeatCount,
+      sectionData,
+      dateData,
     } = this.props;
 
     return (
       <Suspense fallback={<div>Loading...</div>}>
-        <Monitor
-          namespace={namespace}
-          enableSlices={enableSlices}
-          autoRefresh={autoRefresh}
-          start={start}
-          end={end}
-          step={step}
+        <PlayMonitor
+          totalSeatCount={totalSeatCount}
+          reservedSeatCount={reservedSeatCount}
+          sectionData={sectionData}
+          dateData={dateData}
         />
       </Suspense>
     );
   }
 }
 
-export default MonitorWrapper;
+export default PlayMonitorWrapper;

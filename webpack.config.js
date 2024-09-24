@@ -56,14 +56,15 @@ module.exports = {
         auth: 'auth@http://localhost:3001/remoteEntry.js',
         monitor: 'monitor@http://localhost:3006/remoteEntry.js',
         // When Build
-        // auth: 'auth@http://34.47.117.26/page/auth/remoteEntry.js',
-        // monitor: 'monitor@http://34.47.117.26/page/monitor/remoteEntry.js',
+        // auth: 'auth@http://cse.ticketclove.com/page/auth/remoteEntry.js',
+        // monitor: 'monitor@http://cse.ticketclove.com/page/monitor/remoteEntry.js',
       },
       exposes: {
         './OwnerPage': './src/pages/OwnerPage',
         './PlayDetailPage': './src/pages/PlayDetailPage',
         './TemplatePage': './src/pages/TemplatePage',
         './DeployConcertPage': './src/pages/DeployConcertPage',
+        './PlayMonitorPage': './src/pages/PlayMonitorPage',
         './ServerMonitorPage': './src/pages/ServerMonitorPage',
         './PlayConfigurationPage': './src/pages/PlayConfigurationPage',
       },
@@ -74,6 +75,9 @@ module.exports = {
     static: [
       {
         directory: path.join(__dirname, 'dist'),
+      },
+      {
+        directory: path.join(__dirname, 'public'),
       },
     ],
     compress: false,

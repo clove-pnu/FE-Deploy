@@ -11,3 +11,4 @@ declare module 'auth/reissue' {
 }
 
 declare module 'monitor/Monitor';
+declare module 'monitor/PlayMonitor';
