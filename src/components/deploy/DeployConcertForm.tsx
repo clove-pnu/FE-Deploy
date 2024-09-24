@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from '../styles/DeployConcertForm.module.css';
 import Label from '../common/Label';
 import Input from '../common/Input';
@@ -9,8 +9,8 @@ import AddEventDate from './AddEventDate';
 import VenueAndPrice from './VenueAndPrice';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { deployEvent } from '../../apis/event';
-import { getJson } from '../../apis/json';
 import { Image } from '../../utils/type';
+import { venueData } from '../../data/venue';
 
 export default function DeployConcertForm() {
   const [thumbnailImage, setThumbnailImage] = useState<Image>(null);
@@ -25,19 +25,6 @@ export default function DeployConcertForm() {
   const [description, setDescription] = useState('');
   const [descriptionImage, setDesctiptionImage] = useState<Image>(null);
 
-  const [venueSection, setVenueSection] = useState(['R', 'S', 'A']);
-  const [jsonFile, setJsonFile] = useState<Blob>(null);
-
-  useEffect(() => {
-    fetchWithHandler(() => getJson(), {
-      onSuccess: (response) => {
-        const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
-        setJsonFile(blob);
-      },
-      onError: () => {},
-    });
-  }, []);
-
   const handleDeploy = () => {
     if (!(title
       && namespace
@@ -51,11 +38,12 @@ export default function DeployConcertForm() {
     }
 
     const formData = new FormData();
+    const currentVenueSections = venueData.find((v) => v.name === venue).sections;
 
     const seatsAndPriceData = Array.from(price).map(([section, sectionPrice]) => ({
       section,
       price: Number(sectionPrice),
-      count: 100,
+      count: currentVenueSections.find((s) => s.sectionName === section).seats.length,
     }));
 
     const eventData = {
@@ -75,7 +63,6 @@ export default function DeployConcertForm() {
 
     formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
     formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
-    formData.append('jsonFileUrl', jsonFile, 'data.json');
     formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
 
     fetchWithHandler(() => deployEvent(formData), {
@@ -118,9 +105,9 @@ export default function DeployConcertForm() {
         />
       </Label>
       <VenueAndPrice
-        venue={venue}
-        setVenue={setVenue}
-        venueSection={venueSection}
+        selectedVenue={venue}
+        setSelectedVenue={setVenue}
+        venues={venueData}
         price={price}
         setPrice={setPrice}
       />

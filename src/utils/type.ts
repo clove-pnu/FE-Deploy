@@ -33,3 +33,19 @@ export interface Image {
   data: Blob;
   ext: string;
 }
+
+export interface Seat {
+  x: number;
+  y: number;
+}
+
+export interface Section {
+  sectionName: string;
+  seats: Seat[];
+}
+
+export interface Venue {
+  name: string;
+  backgroundImage: string;
+  sections: Section[];
+}
