@@ -33,6 +33,10 @@ export default function PlayConfigurationForm({ playName }: PlayConfigurationFor
     });
   }, []);
 
+  const handleDelete = () => {
+
+  };
+
   return (
     <form className={styles.container}>
       <img
@@ -106,6 +110,13 @@ export default function PlayConfigurationForm({ playName }: PlayConfigurationFor
         className={styles.descriptionImage}
       />
       <Button>배포하기</Button>
+      <button
+        type="button"
+        className={styles.deleteButton}
+        onClick={handleDelete}
+      >
+        공연 삭제하기
+      </button>
     </form>
   );
 }
