@@ -1,8 +1,14 @@
 import { getAccessToken } from '../utils/token';
 import { deployInstance } from './instance';
 
-export async function createNamespace({ namespace }: { namespace: string }) {
-  return deployInstance.get(`/start/${namespace}`, {
+export async function createNamespace({
+  namespace,
+  templateName,
+}: {
+  namespace: string,
+  templateName: string
+}) {
+  return deployInstance.get(`/start/${namespace}/${templateName}`, {
     headers: {
       Authorization: getAccessToken(),
     },

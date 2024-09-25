@@ -11,8 +11,13 @@ import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { deployEvent } from '../../apis/event';
 import { Image } from '../../utils/type';
 import { venueData } from '../../data/venue';
+import { createNamespace } from '../../apis/deploy';
 
-export default function DeployConcertForm() {
+interface DeployConcertFormProps {
+  templateName: string;
+}
+
+export default function DeployConcertForm({ templateName }: DeployConcertFormProps) {
   const [thumbnailImage, setThumbnailImage] = useState<Image>(null);
   const [title, setTitle] = useState('');
   const [namespace, setNamespace] = useState('');
@@ -25,7 +30,7 @@ export default function DeployConcertForm() {
   const [description, setDescription] = useState('');
   const [descriptionImage, setDesctiptionImage] = useState<Image>(null);
 
-  const handleDeploy = () => {
+  const handleDeploy = async () => {
     if (!(title
       && namespace
       && cast
@@ -37,44 +42,65 @@ export default function DeployConcertForm() {
       return;
     }
 
-    const formData = new FormData();
-    const currentVenueSections = venueData.find((v) => v.name === venue).sections;
+    let flag = false;
 
-    const seatsAndPriceData = Array.from(price).map(([section, sectionPrice]) => ({
-      section,
-      price: Number(sectionPrice),
-      count: currentVenueSections.find((s) => s.sectionName === section).seats.length,
-    }));
-
-    const eventData = {
-      name: title,
-      cast,
-      venue,
-      startDate: eventDate[0].split(' ')[0],
-      endDate: eventDate[eventDate.length - 1].split(' ')[0],
-      bookingStartDate,
-      bookingEndDate,
-      eventTime: eventDate,
-      description: {
-        text: description.split('\n'),
-      },
-      seatsAndPrices: seatsAndPriceData,
-    };
-
-    formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
-    formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
-    formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
-
-    fetchWithHandler(() => deployEvent(formData), {
-      onSuccess: (response) => {
-        alert('공연 등록이 완료되었습니다.');
-        console.log(response);
+    await fetchWithHandler(() => createNamespace({
+      namespace,
+      templateName,
+    }), {
+      onSuccess: () => {
+        flag = true;
       },
       onError: (error) => {
-        alert('공연 등록이 실패했습니다.');
         console.error(error);
       },
     });
+
+    if (flag) {
+      const formData = new FormData();
+      const currentVenueSections = venueData.find((v) => v.name === venue).sections;
+
+      const seatsAndPriceData = Array.from(price).map(([section, sectionPrice]) => ({
+        section,
+        price: Number(sectionPrice),
+        count: currentVenueSections.find((s) => s.sectionName === section).seats.length,
+      }));
+
+      const eventData = {
+        name: title,
+        cast,
+        venue,
+        startDate: eventDate[0].split(' ')[0],
+        endDate: eventDate[eventDate.length - 1].split(' ')[0],
+        bookingStartDate,
+        bookingEndDate,
+        eventTime: eventDate,
+        description: {
+          text: description.split('\n'),
+        },
+        seatsAndPrices: seatsAndPriceData,
+      };
+
+      formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
+      formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
+      formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
+
+      fetchWithHandler(() => deployEvent({
+        data: formData,
+        namespace,
+      }), {
+        onSuccess: (response) => {
+          alert('공연 등록이 완료되었습니다.');
+          console.log(response);
+        },
+        onError: (error) => {
+          alert('공연 등록이 실패했습니다.');
+          console.error(error);
+        },
+      });
+    } else {
+      alert('공연 등록이 실패했습니다.');
+    }
   };
 
   return (

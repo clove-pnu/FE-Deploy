@@ -23,11 +23,12 @@ export interface DeployedPlayDetail {
   bookingEndDate: Date;
 }
 
-export interface Template {
-  name: string;
-  type: string;
-  description: string;
+export interface TemplateInfo {
+  nickname: string,
+  descirption: string,
 }
+
+export type Template = [string, TemplateInfo];
 
 export interface Image {
   data: Blob;
@@ -47,5 +48,9 @@ export interface Section {
 export interface Venue {
   name: string;
   backgroundImage: string;
+  imageSize: {
+    width: number;
+    height: number;
+  }
   sections: Section[];
 }

@@ -1,7 +1,10 @@
 import { Template } from '../../utils/type';
 import styles from '../styles/TemplateCard.module.css';
 
-interface TemplateCardProps extends Template {
+interface TemplateCardProps {
+  name: string;
+  nickname: string;
+  description: string;
   selectedTemplateType: string;
   setSelectedTemplateType: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -10,29 +13,29 @@ export default function TemplateCard({
   selectedTemplateType,
   setSelectedTemplateType,
   name,
-  type,
+  nickname,
   description,
 }: TemplateCardProps) {
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = () => {
-    setSelectedTemplateType(type);
+    setSelectedTemplateType(name);
   };
 
   return (
     <label
       className={styles.labelContainer}
-      style={{ borderColor: `${type === selectedTemplateType ? 'var(--color-blue)' : 'var(--color-lightblue)'}` }}
-      htmlFor={type}
+      style={{ borderColor: `${name === selectedTemplateType ? 'var(--color-blue)' : 'var(--color-lightblue)'}` }}
+      htmlFor={name}
     >
       <input
         type="radio"
         name="template"
-        id={type}
-        value={type}
-        checked={type === selectedTemplateType}
+        id={name}
+        value={name}
+        checked={name === selectedTemplateType}
         onChange={handleChange}
       />
       <div className={styles.label}>
-        <div className={styles.name}>{name}</div>
+        <div className={styles.name}>{nickname}</div>
         <div>{description}</div>
       </div>
     </label>
