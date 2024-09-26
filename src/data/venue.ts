@@ -8,29 +8,33 @@ export const venueData: Venue[] = [
   {
     name: '공연장 1',
     backgroundImage: `${serverURL}/images/1.png`,
+    imageSize: {
+      width: 1024,
+      height: 944,
+    },
     sections: [
       {
         sectionName: 'R',
         seats: [
           {
-            x: 24,
-            y: 88,
+            x: 54,
+            y: 182,
           },
           {
-            x: 44,
-            y: 88,
+            x: 74,
+            y: 182,
           },
           {
-            x: 64,
-            y: 88,
+            x: 94,
+            y: 182,
           },
           {
-            x: 84,
-            y: 88,
+            x: 114,
+            y: 182,
           },
           {
-            x: 104,
-            y: 88,
+            x: 134,
+            y: 182,
           },
         ],
       },
@@ -38,24 +42,24 @@ export const venueData: Venue[] = [
         sectionName: 'S',
         seats: [
           {
-            x: 24,
-            y: 224,
+            x: 54,
+            y: 454,
           },
           {
-            x: 44,
-            y: 224,
+            x: 74,
+            y: 454,
           },
           {
-            x: 64,
-            y: 224,
+            x: 94,
+            y: 454,
           },
           {
-            x: 84,
-            y: 224,
+            x: 114,
+            y: 454,
           },
           {
-            x: 104,
-            y: 224,
+            x: 134,
+            y: 454,
           },
         ],
       },
@@ -63,24 +67,24 @@ export const venueData: Venue[] = [
         sectionName: 'A',
         seats: [
           {
-            x: 24,
-            y: 360,
+            x: 54,
+            y: 726,
           },
           {
-            x: 44,
-            y: 360,
+            x: 74,
+            y: 726,
           },
           {
-            x: 64,
-            y: 360,
+            x: 94,
+            y: 726,
           },
           {
-            x: 84,
-            y: 360,
+            x: 114,
+            y: 726,
           },
           {
-            x: 104,
-            y: 360,
+            x: 134,
+            y: 726,
           },
         ],
       },
@@ -89,29 +93,33 @@ export const venueData: Venue[] = [
   {
     name: '공연장 2',
     backgroundImage: `${serverURL}/images/2.png`,
+    imageSize: {
+      width: 760,
+      height: 720,
+    },
     sections: [
       {
         sectionName: 'A',
         seats: [
           {
-            x: 24,
-            y: 88,
+            x: 52,
+            y: 164,
           },
           {
-            x: 44,
-            y: 88,
+            x: 72,
+            y: 164,
           },
           {
-            x: 64,
-            y: 88,
+            x: 92,
+            y: 164,
           },
           {
-            x: 84,
-            y: 88,
+            x: 112,
+            y: 164,
           },
           {
-            x: 104,
-            y: 88,
+            x: 132,
+            y: 164,
           },
         ],
       },
@@ -119,24 +127,24 @@ export const venueData: Venue[] = [
         sectionName: 'B',
         seats: [
           {
-            x: 24,
-            y: 224,
+            x: 466,
+            y: 164,
           },
           {
-            x: 44,
-            y: 224,
+            x: 486,
+            y: 164,
           },
           {
-            x: 64,
-            y: 224,
+            x: 506,
+            y: 164,
           },
           {
-            x: 84,
-            y: 224,
+            x: 526,
+            y: 164,
           },
           {
-            x: 104,
-            y: 224,
+            x: 546,
+            y: 164,
           },
         ],
       },
@@ -144,24 +152,24 @@ export const venueData: Venue[] = [
         sectionName: 'C',
         seats: [
           {
-            x: 24,
-            y: 360,
+            x: 52,
+            y: 500,
           },
           {
-            x: 44,
-            y: 360,
+            x: 72,
+            y: 500,
           },
           {
-            x: 64,
-            y: 360,
+            x: 92,
+            y: 500,
           },
           {
-            x: 84,
-            y: 360,
+            x: 112,
+            y: 500,
           },
           {
-            x: 104,
-            y: 360,
+            x: 132,
+            y: 500,
           },
         ],
       },
