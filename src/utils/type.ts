@@ -5,14 +5,13 @@ export interface LoginResponse {
 }
 
 export interface DeployedPlay {
-  pid: number;
-  thumbnailUrl: string;
-  title: string;
-  playType: string;
-  bookedSeatCount: number;
-  totalSeatCount: number;
+  id: number;
+  image: string;
+  namespace: string;
+  name: string;
   status: string;
-  deployDate: Date;
+  bookingStartDate: string;
+  bookingEndDate: string;
 }
 
 export interface DeployedPlayDetail {
@@ -25,8 +24,34 @@ export interface DeployedPlayDetail {
   bookingEndDate: Date;
 }
 
-export interface Template {
+export interface TemplateInfo {
+  nickname: string,
+  descirption: string,
+}
+
+export type Template = [string, TemplateInfo];
+
+export interface Image {
+  data: Blob;
+  ext: string;
+}
+
+export interface Seat {
+  x: number;
+  y: number;
+}
+
+export interface Section {
+  sectionName: string;
+  seats: Seat[];
+}
+
+export interface Venue {
   name: string;
-  type: string;
-  description: string;
+  backgroundImage: string;
+  imageSize: {
+    width: number;
+    height: number;
+  }
+  sections: Section[];
 }

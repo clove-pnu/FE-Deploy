@@ -1,27 +1,43 @@
+import { getAccessToken } from '../utils/token';
 import { deployInstance } from './instance';
 
-interface CreatePodParams {
-  namespace: string;
-  name: string;
-  port: number;
-}
-
-export async function createNamespace({ namespace }: { namespace: string }) {
-  return deployInstance.get(`/${namespace}/init`);
+export async function createNamespace({
+  namespace,
+  templateName,
+}: {
+  namespace: string,
+  templateName: string
+}) {
+  return deployInstance.get(`/start/${namespace}/${templateName}`, {
+    headers: {
+      Authorization: getAccessToken(),
+    },
+  });
 }
 
 export async function getNamespaces() {
-  return deployInstance.get('/list');
+  return deployInstance.get('/list', {
+    headers: {
+      Authorization: getAccessToken(),
+    },
+  });
 }
 
-export async function getPods({ namespace }: { namespace: string }) {
-  return deployInstance.get(`/${namespace}/pods`);
+export async function deleteService({ namespace }: { namespace: string }) {
+  return deployInstance.delete(`/stop/${namespace}`, {
+    headers: {
+      Authorization: getAccessToken(),
+    },
+  });
 }
 
-export async function createPod({ namespace, name, port }: CreatePodParams) {
-  return deployInstance.post(`/${namespace}/start`, {
-    deploymentName: name,
-    serviceName: name,
-    nodePort: port,
+export async function updateService({ namespace, templateName } : {
+  namespace: string,
+  templateName: string
+}) {
+  return deployInstance.get(`/update/${namespace}/${templateName}`, {
+    headers: {
+      Authorization: getAccessToken(),
+    },
   });
 }

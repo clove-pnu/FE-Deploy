@@ -2,43 +2,39 @@ import { Link } from 'react-router-dom';
 import styles from '../styles/OwnerTab.module.css';
 
 interface OwnerTabProps {
-  pid: number;
+  namespace: string;
   current: 'PlayDetail' | 'PlayMonitor' | 'ServerMonitor' | 'PlayConfiguration';
 }
 
 export default function OwnerTab({
-  pid,
+  namespace,
   current,
 }: OwnerTabProps) {
   return (
     <div className={styles.container}>
       <Link
-        className={styles.tab}
-        style={{ borderBottom: `${current === 'PlayDetail' ? '2px solid black' : ''}` }}
-        to={`/owner/playDetail/${pid}`}
+        className={`${styles.tab} ${current === 'PlayDetail' && styles.current}`}
+        to={`/owner/playDetail/${namespace}`}
       >
-        공연 정보
+        공연 상세 정보
       </Link>
       <Link
-        className={styles.tab}
-        style={{ borderBottom: `${current === 'PlayMonitor' ? '2px solid black' : ''}` }}
-        to={`/owner/playMonitor/${pid}`}
+        className={`${styles.tab} ${current === 'PlayMonitor' && styles.current}`}
+        to={`/owner/playMonitor/${namespace}`}
       >
         예매 현황 모니터링
       </Link>
       <Link
-        className={styles.tab}
-        style={{ borderBottom: `${current === 'ServerMonitor' ? '2px solid black' : ''}` }}
-        to={`/owner/serverMonitor/${pid}`}
+        className={`${styles.tab} ${current === 'ServerMonitor' && styles.current}`}
+        to={`/owner/serverMonitor/${namespace}`}
       >
         공연 서버 모니터링
       </Link>
       <Link
-        className={styles.tab}
-        style={{ borderBottom: `${current === 'PlayConfiguration' ? '2px solid black' : ''}` }}
-        to={`/owner/playConfiguration/${pid}`}
+        className={`${styles.tab} ${current === 'PlayConfiguration' && styles.current}`}
+        to={`/owner/playConfiguration/${namespace}`}
       >
-        공연 설정
+        공연 수정
       </Link>
     </div>
   );

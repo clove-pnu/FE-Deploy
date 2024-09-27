@@ -1,57 +1,113 @@
-import { DeployedPlayDetail } from '../../utils/type';
+import { useEffect, useState } from 'react';
 import styles from '../styles/PlayDetail.module.css';
+import { fetchWithHandler } from '../../utils/fetchWithHandler';
+import { getEvent } from '../../apis/event';
+import { NumberToMoney } from '../../utils/convert';
 
-export default function PlayDetail({
-  pid,
-  thumbnailUrl,
-  title,
-  deployDate,
-  bookingStartDate,
-  bookingEndDate,
-  status,
-}: DeployedPlayDetail) {
+interface PlayDetailProps {
+  namespace: string;
+}
+
+export default function PlayDetail({ namespace }: PlayDetailProps) {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetchWithHandler(() => getEvent(namespace), {
+      onSuccess: (response) => {
+        setData(response.data[0]);
+      },
+      onError: () => {},
+    });
+  }, [namespace]);
+
+  if (!data) {
+    return (
+      <div>
+        잘못된 접근입니다.
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <img
         className={styles.thumbnail}
-        src={thumbnailUrl}
-        alt={`${title} 썸네일`}
+        src={data?.image}
+        alt={`${data?.name} 썸네일`}
       />
-      <div className={styles.left}>
-        <div className={styles.titleDeployDate}>
-          <h2 className={styles.title}>{title}</h2>
-          <p className={styles.deployDate}>{deployDate.toLocaleDateString()}</p>
+      <div className={styles.detailContainer}>
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>공연 이름</div>
+          <div>{data?.name}</div>
         </div>
-        <div className={styles.bookingDate}>
-          <p>
-            예매 시작일:
-            {' '}
-            {bookingStartDate.toLocaleDateString()}
-          </p>
-          <p>
-            예매 종료일:
-            {' '}
-            {bookingEndDate.toLocaleDateString()}
-          </p>
-        </div>
-      </div>
-      <div className={styles.right}>
-        <p>{status}</p>
-        <div className="flex w-80 flex-col items-end gap-2">
-          {/* <div className="flex w-full flex-row justify-between px-2">
-            <p>예매 현황</p>
-            <p>
-              {NumberToMoney(bookedSeatCount)}
-              {' '}
-              /
-              {' '}
-              {NumberToMoney(totalSeatCount)}
-            </p>
+        <div className={styles.wrapper}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>출연진</div>
+            <div>{data?.cast}</div>
           </div>
-          <ProgressBar
-            current={bookedSeatCount}
-            total={totalSeatCount}
-          /> */}
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>공연 장소</div>
+            <div>{data?.venue}</div>
+          </div>
+        </div>
+        <div className={styles.wrapper}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>공연 기간</div>
+            <div>
+              {data?.startDate}
+              {' '}
+              ~
+              {' '}
+              {data?.endDate}
+            </div>
+          </div>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>회차 정보</div>
+            <ul>
+              {data?.eventTime.map((evt, index) => (
+                <li
+                  key={evt.toString()}
+                  className={styles.list}
+                >
+                  {index + 1}
+                  회차:
+                  {' '}
+                  {evt}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className={styles.wrapper}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>좌석 별 가격 정보</div>
+            <ul>
+              {data?.seatsAndPrices.map(({ id: sectionId, section, price }) => (
+                <li
+                  key={sectionId}
+                  className={styles.list}
+                >
+                  {section}
+                  {' '}
+                  구역:
+                  {' '}
+                  {NumberToMoney(price)}
+                  {' '}
+                  원
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>예매 기간</div>
+            <div>
+              {data?.bookingStartDate}
+              {' '}
+              ~
+              {' '}
+              {data?.bookingEndDate}
+            </div>
+          </div>
         </div>
       </div>
     </div>
