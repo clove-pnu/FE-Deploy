@@ -1,8 +1,8 @@
+import axios from 'axios';
 import { getAccessToken } from '../utils/token';
-import { ticketInstance } from './instance';
 
 export function getPlayMonitorData() {
-  return ticketInstance.get('/all', {
+  return axios.get('/default/ticket/all', {
     headers: {
       Authorization: getAccessToken(),
     },

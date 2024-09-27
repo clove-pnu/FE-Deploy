@@ -10,11 +10,30 @@ import { getPlayMonitorData } from '../apis/ticket';
 export default function PlayMonitorPage() {
   const { namespace } = useParams();
   const [eventName, setEventName] = useState<string>(null);
+  const [seatData, setSeatData] = useState(null);
   const [data, setData] = useState(null);
+  const [recentDates, setRecentDates] = useState<string[]>([]);
+
+  useEffect(() => {
+    const now = new Date(Date.now());
+    now.setDate(now.getDate() + 1);
+
+    const recentDateArray = [...new Array(7)].map(() => {
+      now.setDate(now.getDate() - 1);
+
+      const monthString = now.getMonth() + 1;
+      const dateString = now.getDate();
+
+      return `${now.getFullYear()}-${monthString < 10 ? `0${monthString}` : monthString}-${dateString < 10 ? `0${dateString}` : dateString}`;
+    }).reverse();
+
+    setRecentDates(recentDateArray);
+  }, []);
 
   useEffect(() => {
     fetchWithHandler(() => getEvent(namespace), {
       onSuccess: (response) => {
+        setSeatData(response.data[0].seatsAndPrices);
         setEventName(response.data[0].name);
       },
       onError: () => {},
@@ -22,11 +41,10 @@ export default function PlayMonitorPage() {
   }, []);
 
   useEffect(() => {
-    if (!eventName) {
+    if (eventName) {
       fetchWithHandler(() => getPlayMonitorData(), {
         onSuccess: (response) => {
-          console.log(response);
-          setData(response.data);
+          setData(response.data.tickets.filter((d) => d.eventName === eventName));
         },
         onError: () => {},
       });
@@ -40,34 +58,23 @@ export default function PlayMonitorPage() {
         current="PlayMonitor"
       />
       <CategoryTitle>예매 현황 모니터링</CategoryTitle>
-      {data && (
-      <PlayMonitorWrapper
-        totalSeatCount={1000}
-        reservedSeatCount={750}
-        sectionData={[
-          {
-            section: 'R',
-            data: 100,
-          },
-          {
-            section: 'S',
-            data: 250,
-          },
-          {
-            section: 'A',
-            data: 400,
-          },
-        ]}
-        dateData={[
-          ['2024-01-01', 100],
-          ['2024-01-02', 130],
-          ['2024-01-03', 280],
-          ['2024-01-04', 480],
-          ['2024-01-05', 550],
-          ['2024-01-06', 690],
-          ['2024-01-07', 750],
-        ]}
-      />
+      {data && seatData ? (
+        <PlayMonitorWrapper
+          totalSeatCount={seatData.reduce((acc, cur) => acc + cur.count, 0)}
+          reservedSeatCount={data.length}
+          sectionData={seatData.map((currentSection) => ({
+            section: currentSection.section,
+            data: data.filter((d) => d.section === currentSection.section).length,
+          }))}
+          dateData={recentDates.map((currentDate) => [
+            currentDate,
+            data.filter((d) => d.purchaseTime.split('T')[0] === currentDate).length,
+          ])}
+        />
+      ) : (
+        <div>
+          예매 현황을 불러오지 못했습니다.
+        </div>
       )}
     </main>
   );
