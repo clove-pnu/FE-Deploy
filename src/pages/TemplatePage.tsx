@@ -7,7 +7,7 @@ import { getTemplateList } from '../apis/template';
 import { Template } from '../utils/type';
 
 export default function TemplatePage() {
-  const [selectedTemplateType, setSelectedTemplateType] = useState<string>();
+  const [selectedTemplateType, setSelectedTemplateType] = useState<string>(null);
   const [templateList, setTemplateList] = useState<Template[]>([]);
   const navigate = useNavigate();
 
@@ -15,6 +15,7 @@ export default function TemplatePage() {
     fetchWithHandler(() => getTemplateList(), {
       onSuccess: (response) => {
         setTemplateList(response.data);
+        setSelectedTemplateType(response.data[0][0]);
       },
       onError: () => {},
     });
