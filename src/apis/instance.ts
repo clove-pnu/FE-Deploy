@@ -23,3 +23,11 @@ export const templateInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+export const ticketInstance = axios.create({
+  baseURL: '/ticket',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});

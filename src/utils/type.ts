@@ -7,6 +7,7 @@ export interface LoginResponse {
 export interface DeployedPlay {
   id: number;
   image: string;
+  namespace: string;
   name: string;
   status: string;
   bookingStartDate: string;

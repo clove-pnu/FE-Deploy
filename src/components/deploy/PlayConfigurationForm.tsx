@@ -6,32 +6,62 @@ import AddEventDate from './AddEventDate';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { getEvent } from '../../apis/event';
 import styles from '../styles/PlayConfigurationForm.module.css';
+import { getTemplateList } from '../../apis/template';
+import { Template } from '../../utils/type';
+import { updateService } from '../../apis/deploy';
 
 interface PlayConfigurationFormProps {
-  playName: string;
+  namespace: string;
 }
 
-export default function PlayConfigurationForm({ playName }: PlayConfigurationFormProps) {
+export default function PlayConfigurationForm({ namespace }: PlayConfigurationFormProps) {
   const [data, setData] = useState(null);
+  const [name, setName] = useState('');
   const [cast, setCast] = useState('');
   const [eventDate, setEventDate] = useState([]);
   const [bookingStartDate, setBookingStartDate] = useState<string>('');
   const [bookingEndDate, setBookingEndDate] = useState<string>('');
   const [description, setDescription] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [templateList, setTemplateList] = useState<Template[]>([]);
 
   useEffect(() => {
-    fetchWithHandler(() => getEvent(playName), {
+    fetchWithHandler(() => getEvent(namespace), {
       onSuccess: (response) => {
-        setData(response.data);
-        setCast(response.data.cast);
-        setEventDate([...response.data.eventTime]);
-        setBookingStartDate(response.data.bookingStartDate);
-        setBookingEndDate(response.data.bookingEndDate);
-        setDescription(response.data.description.text.join('\n'));
+        setData(response.data[0]);
+        setName(response.data[0].name);
+        setCast(response.data[0].cast);
+        setEventDate([...response.data[0].eventTime]);
+        setBookingStartDate(response.data[0].bookingStartDate);
+        setBookingEndDate(response.data[0].bookingEndDate);
+        setDescription(response.data[0].description.text.join('\n'));
+      },
+      onError: () => {},
+    });
+
+    fetchWithHandler(() => getTemplateList(), {
+      onSuccess: (response) => {
+        setTemplateList(response.data);
       },
       onError: () => {},
     });
   }, []);
+
+  const updateTemplate = async () => {
+    if (selectedTemplate === '') {
+      return;
+    }
+
+    fetchWithHandler(() => updateService({
+      namespace,
+      templateName: selectedTemplate,
+    }), {
+      onSuccess: (response) => {
+        console.log(response);
+      },
+      onError: () => {},
+    });
+  };
 
   const handleDelete = () => {
 
@@ -39,14 +69,41 @@ export default function PlayConfigurationForm({ playName }: PlayConfigurationFor
 
   return (
     <form className={styles.container}>
+      <select
+        onChange={(e) => setSelectedTemplate(e.target.value)}
+        value={selectedTemplate}
+      >
+        <option
+          key=""
+          value=""
+        >
+          템플릿을 선택하세요
+        </option>
+        {templateList.map(([templateName, templateInfo]) => (
+          <option
+            key={templateName}
+            value={templateInfo.nickname}
+          >
+            {templateInfo.nickname}
+          </option>
+        ))}
+      </select>
       <img
         src={data?.image}
         alt="공연 썸네일"
         className={styles.thumbnailImage}
       />
+      <Label name="공연 제목">
+        <Input
+          type="text"
+          name="공연 제목"
+          value={name}
+          setValue={setName}
+        />
+      </Label>
       <div className={styles.category}>
-        <div className={styles.categoryName}>공연 제목</div>
-        <div>{data?.name}</div>
+        <div className={styles.categoryName}>공연 식별자</div>
+        <div className={styles.disabled}>{namespace}</div>
       </div>
       <Label name="출연진">
         <Input
@@ -58,7 +115,7 @@ export default function PlayConfigurationForm({ playName }: PlayConfigurationFor
       </Label>
       <div className={styles.category}>
         <div className={styles.categoryName}>공연 장소</div>
-        <div>{data?.venue}</div>
+        <div className={styles.disabled}>{data?.venue}</div>
       </div>
       <div className={styles.category}>
         <div className={styles.categoryName}>좌석 별 가격</div>
@@ -66,7 +123,10 @@ export default function PlayConfigurationForm({ playName }: PlayConfigurationFor
           {data?.seatsAndPrices && data?.seatsAndPrices.map(({
             id, section, price,
           }) => (
-            <li key={id}>
+            <li
+              key={id}
+              className={styles.disabled}
+            >
               {section}
               {' '}
               구역:
@@ -109,7 +169,7 @@ export default function PlayConfigurationForm({ playName }: PlayConfigurationFor
         alt="공연 설명 첨부 이미지"
         className={styles.descriptionImage}
       />
-      <Button>배포하기</Button>
+      <Button>공연 수정하기</Button>
       <button
         type="button"
         className={styles.deleteButton}

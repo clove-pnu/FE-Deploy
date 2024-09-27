@@ -48,7 +48,8 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
       namespace,
       templateName,
     }), {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        console.log(response);
         flag = true;
       },
       onError: (error) => {
@@ -85,7 +86,7 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
       formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
       formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
 
-      fetchWithHandler(() => deployEvent({
+      await fetchWithHandler(() => deployEvent({
         data: formData,
         namespace,
       }), {
@@ -101,6 +102,10 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
     } else {
       alert('공연 등록이 실패했습니다.');
     }
+
+    window.location.href = process.env.NODE_ENV === 'production'
+      ? 'http://cse.ticketclove.com/page/main/owner'
+      : 'http://localhost:3000/page/main/owner';
   };
 
   return (

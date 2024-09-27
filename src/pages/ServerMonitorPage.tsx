@@ -4,15 +4,15 @@ import OwnerTab from '../components/deploy/OwnerTab';
 import MonitorController from '../components/deploy/MonitorController';
 
 export default function ServerMonitorPage() {
-  const { playName } = useParams();
+  const { namespace } = useParams();
   return (
     <main>
       <OwnerTab
-        playName={playName}
+        namespace={namespace}
         current="ServerMonitor"
       />
       <CategoryTitle>공연 서버 모니터링</CategoryTitle>
-      <MonitorController namespace="default" />
+      <MonitorController namespace={namespace} />
     </main>
   );
 }

@@ -1,13 +1,15 @@
 /* All */
-
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 /* Mobile */
 @media (width < 1024px) {
-  .thumbnail {
+  .thumbnailContainer {
     height: 24rem;
     width: 18rem;
-    background-color: var(--color-blue);
-    object-fit: cover;
   }
 
   .container {
@@ -60,11 +62,9 @@
     padding: 1rem;
   }
   
-  .thumbnail {
+  .thumbnailContainer {
     height: 10rem;
     width: 7.5rem;
-    background-color: var(--color-blue);
-    object-fit: cover;
   }
   
   .content {

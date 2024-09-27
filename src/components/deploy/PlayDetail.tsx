@@ -5,20 +5,20 @@ import { getEvent } from '../../apis/event';
 import { NumberToMoney } from '../../utils/convert';
 
 interface PlayDetailProps {
-  playName: string;
+  namespace: string;
 }
 
-export default function PlayDetail({ playName }: PlayDetailProps) {
+export default function PlayDetail({ namespace }: PlayDetailProps) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetchWithHandler(() => getEvent(playName), {
+    fetchWithHandler(() => getEvent(namespace), {
       onSuccess: (response) => {
-        setData(response.data);
+        setData(response.data[0]);
       },
       onError: () => {},
     });
-  }, [playName]);
+  }, [namespace]);
 
   if (!data) {
     return (
@@ -33,12 +33,12 @@ export default function PlayDetail({ playName }: PlayDetailProps) {
       <img
         className={styles.thumbnail}
         src={data?.image}
-        alt={`${playName} 썸네일`}
+        alt={`${data?.name} 썸네일`}
       />
       <div className={styles.detailContainer}>
         <div className={styles.section}>
           <div className={styles.sectionTitle}>공연 이름</div>
-          <div>{playName}</div>
+          <div>{data?.name}</div>
         </div>
         <div className={styles.wrapper}>
           <div className={styles.section}>

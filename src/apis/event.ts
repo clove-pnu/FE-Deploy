@@ -1,13 +1,8 @@
 import axios from 'axios';
 import { getAccessToken } from '../utils/token';
-import { eventInstance } from './instance';
 
-export function getEvent(name: string) {
-  return eventInstance.get(`/${name}`);
-}
-
-export function getEventList() {
-  return eventInstance.get('');
+export function getEvent(namespace: string) {
+  return axios.get(`/${namespace}/event`);
 }
 
 export function deployEvent({

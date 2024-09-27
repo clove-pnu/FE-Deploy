@@ -6,22 +6,23 @@ interface DeployedPlayListProps {
 }
 
 export default function DeployedPlayList({ deployedPlays }: DeployedPlayListProps) {
+  if (deployedPlays && deployedPlays.length < 1) {
+    return (
+      <div>배포한 공연이 없습니다.</div>
+    );
+  }
+
   return (
     <ul>
-      {deployedPlays.map(({
-        id,
-        image,
-        name,
-        bookingStartDate,
-        bookingEndDate,
-      }) => (
-        <li key={id}>
+      {deployedPlays.map((deployedPlay) => deployedPlay && (
+        <li key={deployedPlay.id}>
           <DeployedPlayCard
-            id={id}
-            image={image}
-            name={name}
-            bookingStartDate={bookingStartDate}
-            bookingEndDate={bookingEndDate}
+            id={deployedPlay.id}
+            namespace={deployedPlay.namespace}
+            image={deployedPlay.image}
+            name={deployedPlay.name}
+            bookingStartDate={deployedPlay.bookingStartDate}
+            bookingEndDate={deployedPlay.bookingEndDate}
             status="예매중"
           />
         </li>

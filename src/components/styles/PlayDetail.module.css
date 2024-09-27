@@ -47,6 +47,7 @@
   .thumbnail {
     height: 32rem;
     width: 24rem;
+    object-fit: cover;
   }
 
   .detailContainer {

@@ -4,6 +4,7 @@ import styles from '../styles/DeployedPlayCard.module.css';
 
 export default function DeployedPlayCard({
   id,
+  namespace,
   image,
   name,
   status,
@@ -12,10 +13,16 @@ export default function DeployedPlayCard({
 }: DeployedPlay) {
   return (
     <div className={styles.container}>
-      <img className={styles.thumbnail} src={image} alt={`${name} 썸네일`} />
+      <div className={styles.thumbnailContainer}>
+        <img
+          src={image}
+          alt={`${name} 썸네일`}
+          className={styles.thumbnail}
+        />
+      </div>
       <div className={styles.content}>
         <div className={styles.left}>
-          <Link to={`./playDetail/${name}`}>
+          <Link to={`./playDetail/${namespace}`}>
             <h2 className={styles.title}>{name}</h2>
           </Link>
         </div>

@@ -4,15 +4,15 @@ import OwnerTab from '../components/deploy/OwnerTab';
 import PlayDetail from '../components/deploy/PlayDetail';
 
 export default function PlayDetailPage() {
-  const { playName } = useParams();
+  const { namespace } = useParams();
   return (
     <main>
       <OwnerTab
-        playName={playName}
+        namespace={namespace}
         current="PlayDetail"
       />
       <CategoryTitle>공연 상세 정보</CategoryTitle>
-      <PlayDetail playName={playName} />
+      <PlayDetail namespace={namespace} />
     </main>
   );
 }
