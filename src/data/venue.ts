@@ -1,13 +1,9 @@
 import { Venue } from '../utils/type';
 
-const serverURL = process.env.NODE_ENV === 'production'
-  ? 'http://cse.ticketclove.com/page/deploy'
-  : 'http://localhost:3002';
-
 export const venueData: Venue[] = [
   {
     name: '공연장 1',
-    backgroundImage: `${serverURL}/images/1.png`,
+    backgroundImage: 'https://raw.githubusercontent.com/clove-pnu/Venue-Images/refs/heads/main/1.png',
     imageSize: {
       width: 1024,
       height: 944,
@@ -92,7 +88,7 @@ export const venueData: Venue[] = [
   },
   {
     name: '공연장 2',
-    backgroundImage: `${serverURL}/images/2.png`,
+    backgroundImage: 'https://raw.githubusercontent.com/clove-pnu/Venue-Images/refs/heads/main/2.png',
     imageSize: {
       width: 760,
       height: 720,
