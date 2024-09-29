@@ -152,7 +152,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     <form className={styles.container}>
       <select
         onChange={(e) => setSelectedTemplate(e.target.value)}
-        value={selectedTemplate}
+        value={templateList.find((t) => t[0] === selectedTemplate)[1].nickname}
       >
         <option
           key=""
@@ -163,7 +163,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
         {templateList.map(([templateName, templateInfo]) => (
           <option
             key={templateName}
-            value={templateInfo.nickname}
+            value={templateName}
           >
             {templateInfo.nickname}
           </option>
