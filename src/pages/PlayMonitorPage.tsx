@@ -68,7 +68,7 @@ export default function PlayMonitorPage() {
           }))}
           dateData={recentDates.map((currentDate) => [
             currentDate,
-            data.filter((d) => d.purchaseTime.split('T')[0] === currentDate).length,
+            data.filter((d) => d.purchaseDate === currentDate).length,
           ])}
         />
       ) : (

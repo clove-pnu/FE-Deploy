@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const deployInstance = axios.create({
   baseURL: '/deploy',
-  timeout: 10000,
+  timeout: 300000,
   headers: {
     'Content-Type': 'application/json',
   },

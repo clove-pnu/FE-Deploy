@@ -4,11 +4,14 @@ import Input from '../common/Input';
 import Button from '../common/Button';
 import AddEventDate from './AddEventDate';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
-import { getEvent } from '../../apis/event';
+import { deployEvent, getEvent } from '../../apis/event';
 import styles from '../styles/PlayConfigurationForm.module.css';
 import { getTemplateList } from '../../apis/template';
 import { Template } from '../../utils/type';
-import { updateService } from '../../apis/deploy';
+import { deleteService, updateService } from '../../apis/deploy';
+import { sleep } from '../../utils/delay';
+import { urlToBlob } from '../../utils/convert';
+import Loading from '../common/Loading';
 
 interface PlayConfigurationFormProps {
   namespace: string;
@@ -24,6 +27,9 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
   const [description, setDescription] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const [templateList, setTemplateList] = useState<Template[]>([]);
+
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   useEffect(() => {
     fetchWithHandler(() => getEvent(namespace), {
@@ -47,24 +53,99 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     });
   }, []);
 
-  const updateTemplate = async () => {
-    if (selectedTemplate === '') {
+  const handleUpdate = async () => {
+    if (!(name
+      && cast
+      && eventDate.length > 0
+      && bookingStartDate
+      && bookingEndDate
+      && description !== ''
+      && selectedTemplate !== '')) {
+      alert('모든 필드를 입력하세요.');
       return;
     }
 
-    fetchWithHandler(() => updateService({
+    setIsUpdating(true);
+
+    let flag = false;
+
+    await fetchWithHandler(() => updateService({
       namespace,
       templateName: selectedTemplate,
     }), {
-      onSuccess: (response) => {
-        console.log(response);
+      onSuccess: () => {
+        flag = true;
       },
-      onError: () => {},
+      onError: (error) => {
+        console.error(error);
+      },
     });
+
+    if (flag) {
+      await sleep(60000);
+
+      const formData = new FormData();
+
+      const eventData = {
+        name,
+        cast,
+        venue: data?.venue,
+        startDate: eventDate[0].split(' ')[0],
+        endDate: eventDate[eventDate.length - 1].split(' ')[0],
+        bookingStartDate,
+        bookingEndDate,
+        eventTime: eventDate,
+        description: {
+          text: description.split('\n'),
+        },
+        seatsAndPrices: data?.seatsAndPrices,
+      };
+
+      const thumbnailData = await urlToBlob(data?.image);
+      const descriptionImageData = await urlToBlob(data?.description.image);
+
+      formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
+      formData.append('image', thumbnailData.data, `thumbnail.${thumbnailData.ext}`);
+      formData.append('descriptionImage', descriptionImageData.data, `description.${descriptionImageData.ext}`);
+
+      await fetchWithHandler(() => deployEvent({
+        data: formData,
+        namespace,
+      }), {
+        onSuccess: (response) => {
+          alert('공연 수정이 완료되었습니다.');
+
+          window.location.href = process.env.NODE_ENV === 'production'
+            ? 'http://cse.ticketclove.com/page/main/owner'
+            : 'http://localhost:3000/page/main/owner';
+        },
+        onError: (error) => {
+          alert('공연 수정에 실패했습니다.');
+          console.error(error);
+        },
+      });
+    } else {
+      alert('공연 수정에 실패했습니다.');
+    }
+
+    setIsUpdating(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    setIsDeleting(true);
 
+    await fetchWithHandler(() => deleteService({ namespace }), {
+      onSuccess: () => {},
+      onError: () => {},
+    });
+
+    alert('공연이 삭제되었습니다.');
+
+    setIsDeleting(false);
+
+    window.location.href = process.env.NODE_ENV === 'production'
+      ? 'http://cse.ticketclove.com/page/main/owner'
+      : 'http://localhost:3000/page/main/owner';
   };
 
   return (
@@ -169,14 +250,22 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
         alt="공연 설명 첨부 이미지"
         className={styles.descriptionImage}
       />
-      <Button>공연 수정하기</Button>
-      <button
-        type="button"
-        className={styles.deleteButton}
-        onClick={handleDelete}
-      >
-        공연 삭제하기
-      </button>
+      {isUpdating ? <Loading /> : (
+        <Button
+          onClick={handleUpdate}
+        >
+          공연 수정하기
+        </Button>
+      )}
+      {isDeleting ? <Loading /> : (
+        <button
+          type="button"
+          className={styles.deleteButton}
+          onClick={handleDelete}
+        >
+          공연 삭제하기
+        </button>
+      )}
     </form>
   );
 }

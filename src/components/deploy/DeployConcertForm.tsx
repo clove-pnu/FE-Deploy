@@ -12,6 +12,8 @@ import { deployEvent } from '../../apis/event';
 import { Image } from '../../utils/type';
 import { venueData } from '../../data/venue';
 import { createNamespace } from '../../apis/deploy';
+import { sleep } from '../../utils/delay';
+import Loading from '../common/Loading';
 
 interface DeployConcertFormProps {
   templateName: string;
@@ -29,6 +31,7 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
   const [bookingEndDate, setBookingEndDate] = useState<string>('');
   const [description, setDescription] = useState('');
   const [descriptionImage, setDesctiptionImage] = useState<Image>(null);
+  const [isDeploying, setIsDeploying] = useState<boolean>(false);
 
   const handleDeploy = async () => {
     if (!(title
@@ -42,14 +45,14 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
       return;
     }
 
+    setIsDeploying(true);
     let flag = false;
 
     await fetchWithHandler(() => createNamespace({
       namespace,
       templateName,
     }), {
-      onSuccess: (response) => {
-        console.log(response);
+      onSuccess: () => {
         flag = true;
       },
       onError: (error) => {
@@ -58,6 +61,8 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
     });
 
     if (flag) {
+      await sleep(60000);
+
       const formData = new FormData();
       const currentVenueSections = venueData.find((v) => v.name === venue).sections;
 
@@ -92,7 +97,10 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
       }), {
         onSuccess: (response) => {
           alert('공연 등록이 완료되었습니다.');
-          console.log(response);
+
+          window.location.href = process.env.NODE_ENV === 'production'
+            ? 'http://cse.ticketclove.com/page/main/owner'
+            : 'http://localhost:3000/page/main/owner';
         },
         onError: (error) => {
           alert('공연 등록이 실패했습니다.');
@@ -103,9 +111,7 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
       alert('공연 등록이 실패했습니다.');
     }
 
-    window.location.href = process.env.NODE_ENV === 'production'
-      ? 'http://cse.ticketclove.com/page/main/owner'
-      : 'http://localhost:3000/page/main/owner';
+    setIsDeploying(false);
   };
 
   return (
@@ -171,7 +177,15 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
         />
       </Label>
       <UploadDescriptionImage setImage={setDesctiptionImage} />
-      <Button onClick={handleDeploy}>배포하기</Button>
+      {isDeploying
+        ? <Loading />
+        : (
+          <Button
+            onClick={handleDeploy}
+          >
+            배포하기
+          </Button>
+        )}
     </form>
   );
 }
