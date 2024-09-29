@@ -151,8 +151,8 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
   return (
     <form className={styles.container}>
       <select
-        onChange={(e) => setSelectedTemplate(e.target.value)}
-        value={templateList.find((t) => t[0] === selectedTemplate)[1].nickname}
+        onChange={(e) => { setSelectedTemplate(e.target.value); }}
+        value={selectedTemplate}
       >
         <option
           key=""
