@@ -1,6 +1,7 @@
 import {
   Component, lazy, Suspense,
 } from 'react';
+import Loading from '../components/common/Loading';
 
 interface Props {
   totalSeatCount: number;
@@ -47,7 +48,7 @@ class PlayMonitorWrapper extends Component<Props, State> {
     } = this.props;
 
     return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading />}>
         <PlayMonitor
           totalSeatCount={totalSeatCount}
           reservedSeatCount={reservedSeatCount}

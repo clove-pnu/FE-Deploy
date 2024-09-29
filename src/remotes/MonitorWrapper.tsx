@@ -1,6 +1,7 @@
 import {
   Component, lazy, Suspense,
 } from 'react';
+import Loading from '../components/common/Loading';
 
 interface Props {
   namespace: string;
@@ -48,7 +49,7 @@ class MonitorWrapper extends Component<Props, State> {
     } = this.props;
 
     return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading />}>
         <Monitor
           namespace={namespace}
           enableSlices={enableSlices}
