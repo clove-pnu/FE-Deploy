@@ -95,7 +95,7 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
         data: formData,
         namespace,
       }), {
-        onSuccess: (response) => {
+        onSuccess: () => {
           alert('공연 등록이 완료되었습니다.');
 
           window.location.href = process.env.NODE_ENV === 'production'
@@ -178,7 +178,13 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
       </Label>
       <UploadDescriptionImage setImage={setDesctiptionImage} />
       {isDeploying
-        ? <Loading />
+        ? (
+          <div>
+            <div>공연 배포 중입니다.</div>
+            <div>최대 3분까지 소요될 수 있습니다.</div>
+            <Loading />
+          </div>
+        )
         : (
           <Button
             onClick={handleDeploy}

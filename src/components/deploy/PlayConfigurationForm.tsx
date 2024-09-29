@@ -112,7 +112,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
         data: formData,
         namespace,
       }), {
-        onSuccess: (response) => {
+        onSuccess: () => {
           alert('공연 수정이 완료되었습니다.');
 
           window.location.href = process.env.NODE_ENV === 'production'
@@ -250,9 +250,16 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
         alt="공연 설명 첨부 이미지"
         className={styles.descriptionImage}
       />
-      {isUpdating ? <Loading /> : (
+      {isUpdating ? (
+        <div>
+          <div>공연 수정 중입니다.</div>
+          <div>최대 3분까지 소요될 수 있습니다.</div>
+          <Loading />
+        </div>
+      ) : (
         <Button
           onClick={handleUpdate}
+          disabled={isDeleting}
         >
           공연 수정하기
         </Button>
@@ -262,6 +269,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
           type="button"
           className={styles.deleteButton}
           onClick={handleDelete}
+          disabled={isUpdating}
         >
           공연 삭제하기
         </button>
