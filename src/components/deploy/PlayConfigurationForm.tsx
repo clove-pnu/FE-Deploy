@@ -4,12 +4,11 @@ import Input from '../common/Input';
 import Button from '../common/Button';
 import AddEventDate from './AddEventDate';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
-import { deployEvent, getEvent } from '../../apis/event';
+import { getEvent, updateEvent } from '../../apis/event';
 import styles from '../styles/PlayConfigurationForm.module.css';
 import { getTemplateList } from '../../apis/template';
 import { Template } from '../../utils/type';
 import { deleteService, updateService } from '../../apis/deploy';
-import { sleep } from '../../utils/delay';
 import { urlToBlob } from '../../utils/convert';
 import Loading from '../common/Loading';
 
@@ -19,7 +18,6 @@ interface PlayConfigurationFormProps {
 
 export default function PlayConfigurationForm({ namespace }: PlayConfigurationFormProps) {
   const [data, setData] = useState(null);
-  const [name, setName] = useState('');
   const [cast, setCast] = useState('');
   const [eventDate, setEventDate] = useState([]);
   const [bookingStartDate, setBookingStartDate] = useState<string>('');
@@ -35,7 +33,6 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     fetchWithHandler(() => getEvent(namespace), {
       onSuccess: (response) => {
         setData(response.data[0]);
-        setName(response.data[0].name);
         setCast(response.data[0].cast);
         setEventDate([...response.data[0].eventTime]);
         setBookingStartDate(response.data[0].bookingStartDate);
@@ -51,11 +48,10 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
       },
       onError: () => {},
     });
-  }, []);
+  }, [namespace]);
 
   const handleUpdate = async () => {
-    if (!(name
-      && cast
+    if (!(cast
       && eventDate.length > 0
       && bookingStartDate
       && bookingEndDate
@@ -67,66 +63,70 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
 
     setIsUpdating(true);
 
-    let flag = false;
-
     await fetchWithHandler(() => updateService({
       namespace,
       templateName: selectedTemplate,
     }), {
       onSuccess: () => {
-        flag = true;
+        alert('공연 수정이 완료되었습니다.');
+        window.location.href = process.env.NODE_ENV === 'production'
+          ? 'http://cse.ticketclove.com/page/main/owner'
+          : 'http://localhost:3000/page/main/owner';
       },
       onError: (error) => {
         console.error(error);
       },
     });
 
-    if (flag) {
-      await sleep(60000);
+    // const formData = new FormData();
 
-      const formData = new FormData();
+    // const eventData = {
+    //   name: data?.name,
+    //   cast,
+    //   venue: data?.venue,
+    //   startDate: eventDate[0].split(' ')[0],
+    //   endDate: eventDate[eventDate.length - 1].split(' ')[0],
+    //   bookingStartDate,
+    //   bookingEndDate,
+    //   eventTime: eventDate,
+    //   description: {
+    //     text: description.split('\n'),
+    //   },
+    //   seatsAndPrices: data?.seatsAndPrices,
+    // };
 
-      const eventData = {
-        name,
-        cast,
-        venue: data?.venue,
-        startDate: eventDate[0].split(' ')[0],
-        endDate: eventDate[eventDate.length - 1].split(' ')[0],
-        bookingStartDate,
-        bookingEndDate,
-        eventTime: eventDate,
-        description: {
-          text: description.split('\n'),
-        },
-        seatsAndPrices: data?.seatsAndPrices,
-      };
+    // const thumbnailData = await urlToBlob(data?.image);
+    // const descriptionImageData = await urlToBlob(data?.description.image);
 
-      const thumbnailData = await urlToBlob(data?.image);
-      const descriptionImageData = await urlToBlob(data?.description.image);
+    // formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
+    // formData.append('image', thumbnailData.data, `thumbnail.${thumbnailData.ext}`);
+    // formData.append('descriptionImage', descriptionImageData.data, `description.${descriptionImageData.ext}`);
 
-      formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
-      formData.append('image', thumbnailData.data, `thumbnail.${thumbnailData.ext}`);
-      formData.append('descriptionImage', descriptionImageData.data, `description.${descriptionImageData.ext}`);
+    // await fetchWithHandler(() => updateEvent({
+    //   data: formData,
+    //   namespace,
+    // }), {
+    //   onSuccess: async () => {
+    //     await fetchWithHandler(() => updateService({
+    //       namespace,
+    //       templateName: selectedTemplate,
+    //     }), {
+    //       onSuccess: () => {},
+    //       onError: (error) => {
+    //         console.error(error);
+    //       },
+    //     });
 
-      await fetchWithHandler(() => deployEvent({
-        data: formData,
-        namespace,
-      }), {
-        onSuccess: () => {
-          alert('공연 수정이 완료되었습니다.');
-
-          window.location.href = process.env.NODE_ENV === 'production'
-            ? 'http://cse.ticketclove.com/page/main/owner'
-            : 'http://localhost:3000/page/main/owner';
-        },
-        onError: (error) => {
-          alert('공연 수정에 실패했습니다.');
-          console.error(error);
-        },
-      });
-    } else {
-      alert('공연 수정에 실패했습니다.');
-    }
+    //     alert('공연 수정이 완료되었습니다.');
+    //     window.location.href = process.env.NODE_ENV === 'production'
+    //       ? 'http://cse.ticketclove.com/page/main/owner'
+    //       : 'http://localhost:3000/page/main/owner';
+    //   },
+    //   onError: (error) => {
+    //     alert('공연 수정에 실패했습니다.');
+    //     console.error(error);
+    //   },
+    // });
 
     setIsUpdating(false);
   };
@@ -174,14 +174,10 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
         alt="공연 썸네일"
         className={styles.thumbnailImage}
       />
-      <Label name="공연 제목">
-        <Input
-          type="text"
-          name="공연 제목"
-          value={name}
-          setValue={setName}
-        />
-      </Label>
+      <div className={styles.category}>
+        <div className={styles.categoryName}>공연 제목</div>
+        <div className={styles.disabled}>{data?.name}</div>
+      </div>
       <div className={styles.category}>
         <div className={styles.categoryName}>공연 식별자</div>
         <div className={styles.disabled}>{namespace}</div>
@@ -251,11 +247,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
         className={styles.descriptionImage}
       />
       {isUpdating ? (
-        <div>
-          <div>공연 수정 중입니다.</div>
-          <div>최대 3분까지 소요될 수 있습니다.</div>
-          <Loading />
-        </div>
+        <Loading />
       ) : (
         <Button
           onClick={handleUpdate}
