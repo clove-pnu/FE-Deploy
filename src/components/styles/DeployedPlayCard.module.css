@@ -51,9 +51,16 @@
   .right {
     margin-top: 2rem;
     display: flex;
-    flex-direction: row;
-    align-items: end;
+    flex-direction: column-reverse;
+    gap: 1rem;
     justify-content: space-between;
+  }
+
+  .dateInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: end;
   }
 }
 
@@ -128,5 +135,16 @@
   .date {
     width: 6rem;
     color: var(--color-gray);
+  }
+
+  .dateInfo {
+    display: flex;
+    flex-direction: row;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .simpleMonitor {
+    width: 8rem;
   }
 }

@@ -27,19 +27,23 @@ export default function DeployedPlayCard({
           </Link>
         </div>
         <div className={styles.right}>
-          <SimplePlayMonitorWrapper
-            namespace={namespace}
-            seatData={seatsAndPrices}
-          />
-          <div className={styles.bookingDate}>
-            <div className={styles.sectionTitle}>예매 기간</div>
-            <div>
-              <span>{bookingStartDate}</span>
-              <span>~</span>
-              <span>{bookingEndDate}</span>
-            </div>
+          <div className={styles.simpleMonitor}>
+            <SimplePlayMonitorWrapper
+              namespace={namespace}
+              seatData={seatsAndPrices}
+            />
           </div>
-          <div className={styles.bold}>예매중</div>
+          <div className={styles.dateInfo}>
+            <div className={styles.bookingDate}>
+              <div className={styles.sectionTitle}>예매 기간</div>
+              <div>
+                <span>{bookingStartDate}</span>
+                <span>~</span>
+                <span>{bookingEndDate}</span>
+              </div>
+            </div>
+            <div className={styles.bold}>예매중</div>
+          </div>
           {/* <div className={styles.date}>{deployDate.toLocaleDateString()}</div> */}
         </div>
       </div>
