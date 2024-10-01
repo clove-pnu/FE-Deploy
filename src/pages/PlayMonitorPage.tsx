@@ -13,6 +13,7 @@ export default function PlayMonitorPage() {
   const [seatData, setSeatData] = useState(null);
   const [data, setData] = useState(null);
   const [recentDates, setRecentDates] = useState<string[]>([]);
+  const [dateData, setDateData] = useState<[string, number][]>([]);
 
   useEffect(() => {
     const now = new Date(Date.now());
@@ -44,7 +45,22 @@ export default function PlayMonitorPage() {
     if (eventName) {
       fetchWithHandler(() => getPlayMonitorData(), {
         onSuccess: (response) => {
-          setData(response.data.tickets.filter((d) => d.eventName === eventName));
+          const dataResult = response.data.tickets.filter((d) => d.eventName === eventName);
+
+          let acc = 0;
+          const dateDataResult: [string, number][] = recentDates.map((currentDate) => {
+            const cur = dataResult.filter((d) => d.purchaseDate === currentDate).length;
+            const count = acc + cur;
+            acc += cur;
+
+            return [
+              currentDate,
+              count,
+            ];
+          });
+
+          setData(dataResult);
+          setDateData(dateDataResult);
         },
         onError: () => {},
       });
@@ -66,10 +82,7 @@ export default function PlayMonitorPage() {
             section: currentSection.section,
             data: data.filter((d) => d.section === currentSection.section).length,
           }))}
-          dateData={recentDates.map((currentDate) => [
-            currentDate,
-            data.filter((d) => d.purchaseDate === currentDate).length,
-          ])}
+          dateData={dateData}
         />
       ) : (
         <div>
