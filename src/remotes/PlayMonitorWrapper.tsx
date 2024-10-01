@@ -4,13 +4,8 @@ import {
 import Loading from '../components/common/Loading';
 
 interface Props {
-  totalSeatCount: number;
-  reservedSeatCount: number;
-  sectionData: {
-    section: string;
-    data: number;
-  }[];
-  dateData: [string, number][];
+  namespace: string;
+  seatData: any;
 }
 
 interface State {
@@ -41,19 +36,15 @@ class PlayMonitorWrapper extends Component<Props, State> {
     }
 
     const {
-      totalSeatCount,
-      reservedSeatCount,
-      sectionData,
-      dateData,
+      namespace,
+      seatData,
     } = this.props;
 
     return (
       <Suspense fallback={<Loading />}>
         <PlayMonitor
-          totalSeatCount={totalSeatCount}
-          reservedSeatCount={reservedSeatCount}
-          sectionData={sectionData}
-          dateData={dateData}
+          namespace={namespace}
+          seatData={seatData}
         />
       </Suspense>
     );
