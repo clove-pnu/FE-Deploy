@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
 import { DeployedPlay } from '../../utils/type';
 import styles from '../styles/DeployedPlayCard.module.css';
+import SimplePlayMonitorWrapper from '../../remotes/SimplePlayMonitorWrapper';
 
 export default function DeployedPlayCard({
-  id,
   namespace,
   image,
   name,
-  status,
   bookingStartDate,
   bookingEndDate,
+  seatsAndPrices,
 }: DeployedPlay) {
   return (
     <div className={styles.container}>
@@ -27,22 +27,19 @@ export default function DeployedPlayCard({
           </Link>
         </div>
         <div className={styles.right}>
+          <SimplePlayMonitorWrapper
+            namespace={namespace}
+            seatData={seatsAndPrices}
+          />
           <div className={styles.bookingDate}>
-            <div>예매 기간</div>
+            <div className={styles.sectionTitle}>예매 기간</div>
             <div>
               <span>{bookingStartDate}</span>
               <span>~</span>
               <span>{bookingEndDate}</span>
             </div>
           </div>
-          {/* <div className={styles.seat}>
-            <span>예매 좌석 수</span>
-            <span className={styles.bold}>{bookedSeatCount}</span>
-            <span>/</span>
-            <span>전체 좌석 수</span>
-            <span className={styles.bold}>{totalSeatCount}</span>
-          </div> */}
-          <div className={styles.bold}>{status}</div>
+          <div className={styles.bold}>예매중</div>
           {/* <div className={styles.date}>{deployDate.toLocaleDateString()}</div> */}
         </div>
       </div>

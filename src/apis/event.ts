@@ -28,7 +28,7 @@ export function updateEvent({
   data: FormData;
   namespace: string;
 }) {
-  return axios.put(`/${namespace}/events`, data, {
+  return axios.put(`/${namespace}/event`, data, {
     timeout: 10000,
     headers: {
       'Content-Type': 'multipart/form-data',

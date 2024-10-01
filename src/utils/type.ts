@@ -9,9 +9,9 @@ export interface DeployedPlay {
   image: string;
   namespace: string;
   name: string;
-  status: string;
   bookingStartDate: string;
   bookingEndDate: string;
+  seatsAndPrices: any;
 }
 
 export interface DeployedPlayDetail {

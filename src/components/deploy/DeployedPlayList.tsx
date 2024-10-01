@@ -23,7 +23,7 @@ export default function DeployedPlayList({ deployedPlays }: DeployedPlayListProp
             name={deployedPlay.name}
             bookingStartDate={deployedPlay.bookingStartDate}
             bookingEndDate={deployedPlay.bookingEndDate}
-            status="예매중"
+            seatsAndPrices={deployedPlay.seatsAndPrices}
           />
         </li>
       ))}

@@ -5,6 +5,11 @@
   object-fit: cover;
 }
 
+.sectionTitle {
+  font-size: 0.75rem;
+  color: #808080;
+}
+
 /* Mobile */
 @media (width < 1024px) {
   .thumbnailContainer {
@@ -34,7 +39,7 @@
   .bookingDate {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
     white-space: nowrap;
   }
 
@@ -98,13 +103,15 @@
     display: flex;
     flex-direction: row;
     gap: 4rem;
+    align-items: center;
   }
   
   .bookingDate {
     display: flex;
-    flex-direction: row;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
     white-space: nowrap;
+    align-items: center;
   }
   
   .seat {
