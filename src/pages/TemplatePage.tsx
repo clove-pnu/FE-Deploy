@@ -7,6 +7,8 @@ import { getTemplateList } from '../apis/template';
 import { Template } from '../utils/type';
 
 export default function TemplatePage() {
+  document.title = '공연 템플릿 선택 | Clove 티켓';
+
   const [selectedTemplateType, setSelectedTemplateType] = useState<string>(null);
   const [templateList, setTemplateList] = useState<Template[]>([]);
   const navigate = useNavigate();

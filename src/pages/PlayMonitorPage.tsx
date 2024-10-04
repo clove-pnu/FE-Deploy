@@ -7,6 +7,8 @@ import { fetchWithHandler } from '../utils/fetchWithHandler';
 import { getEvent } from '../apis/event';
 
 export default function PlayMonitorPage() {
+  document.title = '예매 현황 모니터링 | Clove 티켓';
+
   const { namespace } = useParams();
   const [seatData, setSeatData] = useState(null);
 

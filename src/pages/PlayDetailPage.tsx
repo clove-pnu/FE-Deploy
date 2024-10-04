@@ -4,7 +4,10 @@ import OwnerTab from '../components/deploy/OwnerTab';
 import PlayDetail from '../components/deploy/PlayDetail';
 
 export default function PlayDetailPage() {
+  document.title = '공연 상세 정보 | Clove 티켓';
+
   const { namespace } = useParams();
+
   return (
     <main>
       <OwnerTab

@@ -8,6 +8,8 @@ import { getNamespaces } from '../apis/deploy';
 import { getEvent } from '../apis/event';
 
 export default function OwnerPage() {
+  document.title = '공연 관리 | Clove 티켓';
+
   const [namespaceList, setNamespaceList] = useState<string[]>([]);
   const [deployedPlayList, setDeployedPlayList] = useState([]);
 
