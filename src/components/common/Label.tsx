@@ -16,12 +16,14 @@ export default function Label({ children, name, unit }: LabelProps) {
       >
         {name}
       </label>
-      {children}
-      {unit && (
-      <div>
-        {unit}
+      <div className={styles.input}>
+        {children}
+        {unit && (
+        <div>
+          {unit}
+        </div>
+        )}
       </div>
-      )}
     </div>
   );
 }

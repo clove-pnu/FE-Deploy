@@ -25,7 +25,10 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
   const [namespace, setNamespace] = useState('');
   const [cast, setCast] = useState('');
   const [venue, setVenue] = useState<string>('');
-  const [price, setPrice] = useState<Map<string, string>>(new Map());
+  const [priceMap, setPriceMap] = useState<Map<string, {
+    price: number;
+    count: number;
+  }>>(new Map());
   const [eventDate, setEventDate] = useState([]);
   const [bookingStartDate, setBookingStartDate] = useState<string>('');
   const [bookingEndDate, setBookingEndDate] = useState<string>('');
@@ -64,12 +67,12 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
       await sleep(60000);
 
       const formData = new FormData();
-      const currentVenueSections = venueData.find((v) => v.name === venue).sections;
+      // const currentVenueSections = venueData.find((v) => v.name === venue).sections;
 
-      const seatsAndPriceData = Array.from(price).map(([section, sectionPrice]) => ({
+      const seatsAndPriceData = Array.from(priceMap).map(([section, { price, count }]) => ({
         section,
-        price: Number(sectionPrice),
-        count: currentVenueSections.find((s) => s.sectionName === section).seats.length,
+        price,
+        count,
       }));
 
       const eventData = {
@@ -145,8 +148,8 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
         selectedVenue={venue}
         setSelectedVenue={setVenue}
         venues={venueData}
-        price={price}
-        setPrice={setPrice}
+        priceMap={priceMap}
+        setPriceMap={setPriceMap}
       />
       <AddEventDate
         eventDate={eventDate}

@@ -5,9 +5,17 @@
   gap: 0.5rem;
   border-bottom: 2px solid black;
   padding: 0.5rem;
+  justify-content: space-between;
 }
 
 .label {
   font-weight: bold;
-  min-width: 100px;
+  white-space: nowrap;
+}
+
+.input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
 }
