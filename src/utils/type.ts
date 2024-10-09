@@ -25,8 +25,9 @@ export interface DeployedPlayDetail {
 }
 
 export interface TemplateInfo {
-  nickname: string,
-  descirption: string,
+  nickname: string;
+  descirption: string;
+  type: string[];
 }
 
 export type Template = [string, TemplateInfo];
@@ -34,6 +35,7 @@ export type Template = [string, TemplateInfo];
 export interface Image {
   data: Blob;
   ext: string;
+  url: string;
 }
 
 export interface Seat {
@@ -54,4 +56,17 @@ export interface Venue {
     height: number;
   }
   sections: Section[];
+}
+
+export interface MerchandiseImage {
+  url: string;
+  data: Blob;
+  ext: string;
+}
+
+export interface Merchandise {
+  image: MerchandiseImage;
+  name: string;
+  price: number;
+  count: number;
 }

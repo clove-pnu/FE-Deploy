@@ -9,17 +9,22 @@ import AddEventDate from './AddEventDate';
 import VenueAndPrice from './VenueAndPrice';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { deployEvent } from '../../apis/event';
-import { Image } from '../../utils/type';
+import { Image, Merchandise } from '../../utils/type';
 import { venueData } from '../../data/venue';
 import { createNamespace } from '../../apis/deploy';
 import { sleep } from '../../utils/delay';
 import Loading from '../common/Loading';
+import AddMerchandise from './AddMerchandise';
 
 interface DeployConcertFormProps {
   templateName: string;
+  templateType: string[];
 }
 
-export default function DeployConcertForm({ templateName }: DeployConcertFormProps) {
+export default function DeployConcertForm({
+  templateName,
+  templateType,
+}: DeployConcertFormProps) {
   const [thumbnailImage, setThumbnailImage] = useState<Image>(null);
   const [title, setTitle] = useState('');
   const [namespace, setNamespace] = useState('');
@@ -35,6 +40,8 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
   const [description, setDescription] = useState('');
   const [descriptionImage, setDesctiptionImage] = useState<Image>(null);
   const [isDeploying, setIsDeploying] = useState<boolean>(false);
+
+  const [merchandises, setMerchandises] = useState<Merchandise[]>([]);
 
   const handleDeploy = async () => {
     if (!(title
@@ -64,9 +71,10 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
     });
 
     if (flag) {
-      await sleep(60000);
-
       const formData = new FormData();
+
+      await sleep(90000);
+
       // const currentVenueSections = venueData.find((v) => v.name === venue).sections;
 
       const seatsAndPriceData = Array.from(priceMap).map(([section, { price, count }]) => ({
@@ -75,24 +83,65 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
         count,
       }));
 
-      const eventData = {
-        name: title,
-        cast,
-        venue,
-        startDate: eventDate[0].split(' ')[0],
-        endDate: eventDate[eventDate.length - 1].split(' ')[0],
-        bookingStartDate,
-        bookingEndDate,
-        eventTime: eventDate,
-        description: {
-          text: description.split('\n'),
-        },
-        seatsAndPrices: seatsAndPriceData,
-      };
+      const merchandiseData = merchandises.map((m) => ({
+        name: m.name,
+        price: m.price,
+        count: m.count,
+      }));
 
-      formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
-      formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
+      console.log(seatsAndPriceData);
+      console.log(merchandiseData);
+
+      let eventData: any;
+
+      if (templateType?.includes('merchandise')) {
+        eventData = {
+          name: title,
+          cast,
+          venue,
+          eventTime: eventDate,
+          startDate: eventDate[0].split(' ')[0],
+          endDate: eventDate[eventDate.length - 1].split(' ')[0],
+          bookingStartDate,
+          bookingEndDate,
+          description: {
+            text: description.split('\n'),
+          },
+          seatsAndPrices: seatsAndPriceData,
+          merches: merchandiseData,
+        };
+        console.log(eventData);
+      } else {
+        eventData = {
+          name: title,
+          cast,
+          venue,
+          startDate: eventDate[0].split(' ')[0],
+          endDate: eventDate[eventDate.length - 1].split(' ')[0],
+          bookingStartDate,
+          bookingEndDate,
+          eventTime: eventDate,
+          description: {
+            text: description.split('\n'),
+          },
+          seatsAndPrices: seatsAndPriceData,
+        };
+        console.log(eventData);
+      }
+
+      // console.log(eventData);
+      const eventDataJson = JSON.stringify(eventData);
+
+      formData.append('event', new Blob([eventDataJson], { type: 'application/json' }), 'venue.json');
       formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
+      formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
+      merchandises.forEach((m, i) => {
+        formData.append('merchImages', m.image.data, `merch-${i}.${m.image.ext}`);
+      });
+
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
 
       await fetchWithHandler(() => deployEvent({
         data: formData,
@@ -106,12 +155,12 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
             : 'http://localhost:3000/page/main/owner';
         },
         onError: (error) => {
-          alert('공연 등록이 실패했습니다.');
+          alert('공연 등록에 실패했습니다.');
           console.error(error);
         },
       });
     } else {
-      alert('공연 등록이 실패했습니다.');
+      alert('공연 등록에 실패했습니다.');
     }
 
     setIsDeploying(false);
@@ -119,7 +168,10 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
 
   return (
     <form className={styles.container}>
-      <UploadThumbnailImage setImage={setThumbnailImage} />
+      <UploadThumbnailImage
+        image={thumbnailImage}
+        setImage={setThumbnailImage}
+      />
       <Label name="공연 제목">
         <Input
           type="text"
@@ -150,6 +202,7 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
         venues={venueData}
         priceMap={priceMap}
         setPriceMap={setPriceMap}
+        isStanding={templateType?.includes('noseat')}
       />
       <AddEventDate
         eventDate={eventDate}
@@ -179,7 +232,16 @@ export default function DeployConcertForm({ templateName }: DeployConcertFormPro
           setValue={setDescription}
         />
       </Label>
-      <UploadDescriptionImage setImage={setDesctiptionImage} />
+      <UploadDescriptionImage
+        image={descriptionImage}
+        setImage={setDesctiptionImage}
+      />
+      {templateType?.includes('merchandise') && (
+      <AddMerchandise
+        merchandises={merchandises}
+        setMerchandises={setMerchandises}
+      />
+      )}
       {isDeploying
         ? (
           <div>

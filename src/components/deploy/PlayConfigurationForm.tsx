@@ -2,15 +2,18 @@ import { useEffect, useState } from 'react';
 import Label from '../common/Label';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import AddEventDate from './AddEventDate';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { getEvent, updateEvent } from '../../apis/event';
 import styles from '../styles/PlayConfigurationForm.module.css';
 import { getTemplateList } from '../../apis/template';
-import { Template } from '../../utils/type';
+import { Image, Merchandise, Template } from '../../utils/type';
 import { deleteService, updateService } from '../../apis/deploy';
 import { urlToBlob } from '../../utils/convert';
 import Loading from '../common/Loading';
+import UploadThumbnailImage from './UploadThumbnailImage';
+import UploadDescriptionImage from './UploadDescriptionImage';
+import AddMerchandise from './AddMerchandise';
+import { sleep } from '../../utils/delay';
 
 interface PlayConfigurationFormProps {
   namespace: string;
@@ -18,6 +21,8 @@ interface PlayConfigurationFormProps {
 
 export default function PlayConfigurationForm({ namespace }: PlayConfigurationFormProps) {
   const [data, setData] = useState(null);
+  const [thumbnailImage, setThumbnailImage] = useState<Image>(null);
+  const [descriptionImage, setDesctiptionImage] = useState<Image>(null);
   const [cast, setCast] = useState('');
   const [eventDate, setEventDate] = useState([]);
   const [bookingStartDate, setBookingStartDate] = useState<string>('');
@@ -29,15 +34,59 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
+  const [templateType, setTemplateType] = useState<string[]>([]);
+
+  const [merchandises, setMerchandises] = useState<Merchandise[]>([]);
+
   useEffect(() => {
     fetchWithHandler(() => getEvent(namespace), {
-      onSuccess: (response) => {
+      onSuccess: async (response) => {
         setData(response.data[0]);
         setCast(response.data[0].cast);
         setEventDate([...response.data[0].eventTime]);
         setBookingStartDate(response.data[0].bookingStartDate);
         setBookingEndDate(response.data[0].bookingEndDate);
         setDescription(response.data[0].description.text.join('\n'));
+
+        if (response.data[0].image && response.data[0].description.image) {
+          const thumbnailData = await urlToBlob(response.data[0].image);
+          const descriptionImageData = await urlToBlob(response.data[0].description.image);
+
+          setThumbnailImage({
+            data: thumbnailData.data,
+            ext: thumbnailData.ext,
+            url: response.data[0].image,
+          });
+
+          setDesctiptionImage({
+            data: descriptionImageData.data,
+            ext: descriptionImageData.ext,
+            url: response.data[0].description.image,
+          });
+        }
+
+        const merchandiseData = response.data[0].merches;
+
+        if (merchandiseData?.length > 0) {
+          const merchandisePromiseResult: Merchandise[] = await Promise.all(
+            merchandiseData.map(async (m) => {
+              const merchandiseImageData = await urlToBlob(m.image);
+
+              return {
+                image: {
+                  url: m.image,
+                  ext: merchandiseImageData.ext,
+                  data: merchandiseImageData.data,
+                },
+                name: m.name,
+                price: m.price,
+                count: m.count,
+              };
+            }),
+          );
+
+          setMerchandises(merchandisePromiseResult);
+        }
       },
       onError: () => {},
     });
@@ -62,71 +111,116 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     }
 
     setIsUpdating(true);
+    let flag = false;
 
     await fetchWithHandler(() => updateService({
       namespace,
       templateName: selectedTemplate,
     }), {
       onSuccess: () => {
-        alert('공연 수정이 완료되었습니다.');
-        window.location.href = process.env.NODE_ENV === 'production'
-          ? 'http://cse.ticketclove.com/page/main/owner'
-          : 'http://localhost:3000/page/main/owner';
+        flag = true;
       },
       onError: (error) => {
         console.error(error);
       },
     });
 
-    // const formData = new FormData();
+    if (flag) {
+      alert('공연 수정이 완료되었습니다.');
 
-    // const eventData = {
-    //   name: data?.name,
-    //   cast,
-    //   venue: data?.venue,
-    //   startDate: eventDate[0].split(' ')[0],
-    //   endDate: eventDate[eventDate.length - 1].split(' ')[0],
-    //   bookingStartDate,
-    //   bookingEndDate,
-    //   eventTime: eventDate,
-    //   description: {
-    //     text: description.split('\n'),
-    //   },
-    //   seatsAndPrices: data?.seatsAndPrices,
-    // };
+      window.location.href = process.env.NODE_ENV === 'production'
+        ? 'http://cse.ticketclove.com/page/main/owner'
+        : 'http://localhost:3000/page/main/owner';
+    } else {
+      alert('공연 수정에 실패했습니다.');
+    }
 
-    // const thumbnailData = await urlToBlob(data?.image);
-    // const descriptionImageData = await urlToBlob(data?.description.image);
+    // if (flag) {
+    //   const formData = new FormData();
 
-    // formData.append('event', new Blob([JSON.stringify(eventData)], { type: 'application/json' }), 'venue.json');
-    // formData.append('image', thumbnailData.data, `thumbnail.${thumbnailData.ext}`);
-    // formData.append('descriptionImage', descriptionImageData.data, `description.${descriptionImageData.ext}`);
+    //   await sleep(90000);
 
-    // await fetchWithHandler(() => updateEvent({
-    //   data: formData,
-    //   namespace,
-    // }), {
-    //   onSuccess: async () => {
-    //     await fetchWithHandler(() => updateService({
-    //       namespace,
-    //       templateName: selectedTemplate,
-    //     }), {
-    //       onSuccess: () => {},
-    //       onError: (error) => {
-    //         console.error(error);
+    //   const merchandiseData = merchandises.map((m) => ({
+    //     name: m.name,
+    //     price: m.price,
+    //     count: m.count,
+    //   }));
+
+    //   console.log(merchandiseData);
+
+    //   let eventData: any;
+
+    //   if (templateType?.includes('merchandise')) {
+    //     eventData = {
+    //       name: data?.name,
+    //       cast,
+    //       venue: data?.venue,
+    //       eventTime: eventDate,
+    //       startDate: eventDate[0].split(' ')[0],
+    //       endDate: eventDate[eventDate.length - 1].split(' ')[0],
+    //       bookingStartDate,
+    //       bookingEndDate,
+    //       description: {
+    //         text: description.split('\n'),
     //       },
-    //     });
+    //       seatsAndPrices: data?.seatsAndPrices,
+    //       merches: merchandiseData,
+    //     };
+    //     console.log(eventData);
+    //   } else {
+    //     eventData = {
+    //       name: data?.name,
+    //       cast,
+    //       venue: data?.venue,
+    //       startDate: eventDate[0].split(' ')[0],
+    //       endDate: eventDate[eventDate.length - 1].split(' ')[0],
+    //       bookingStartDate,
+    //       bookingEndDate,
+    //       eventTime: eventDate,
+    //       description: {
+    //         text: description.split('\n'),
+    //       },
+    //       seatsAndPrices: data?.seatsAndPrices,
+    //     };
+    //     console.log(eventData);
+    //   }
 
-    //     alert('공연 수정이 완료되었습니다.');
-    //     window.location.href = process.env.NODE_ENV === 'production'
-    //       ? 'http://cse.ticketclove.com/page/main/owner'
-    //       : 'http://localhost:3000/page/main/owner';
-    //   },
-    //   onError: (error) => {
-    //     alert('공연 수정에 실패했습니다.');
-    //     console.error(error);
-    //   },
-    // });
+    //   // console.log(eventData);
+    //   const eventDataJson = JSON.stringify(eventData);
+
+    //   formData.append('event', new Blob([eventDataJson], { type: 'application/json' }), 'venue.json');
+    //   formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
+    //   formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
+
+    //   if (templateType?.includes('merchandise')) {
+    //     merchandises.forEach((m, i) => {
+    //       formData.append('merchImages', m.image.data, `merch-${i}.${m.image.ext}`);
+    //     });
+    //   }
+
+    //   formData.forEach((value, key) => {
+    //     console.log(key, value);
+    //   });
+
+    //   await fetchWithHandler(() => updateEvent({
+    //     data: formData,
+    //     namespace,
+    //   }), {
+    //     onSuccess: () => {
+    //       alert('공연 수정이 완료되었습니다.');
+
+    //       window.location.href = process.env.NODE_ENV === 'production'
+    //         ? 'http://cse.ticketclove.com/page/main/owner'
+    //         : 'http://localhost:3000/page/main/owner';
+    //     },
+    //     onError: (error) => {
+    //       alert('공연 수정에 실패했습니다.');
+    //       console.error(error);
+    //     },
+    //   });
+    // } else {
+    //   alert('공연 수정에 실패했습니다.');
+    // }
 
     setIsUpdating(false);
   };
@@ -151,7 +245,10 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
   return (
     <form className={styles.container}>
       <select
-        onChange={(e) => { setSelectedTemplate(e.target.value); }}
+        onChange={(e) => {
+          setSelectedTemplate(e.target.value);
+          setTemplateType(templateList.find((t) => t[0] === e.target.value)[1].type);
+        }}
         value={selectedTemplate}
       >
         <option
@@ -169,10 +266,14 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
           </option>
         ))}
       </select>
-      <img
+      {/* <img
         src={data?.image}
         alt="공연 썸네일"
         className={styles.thumbnailImage}
+      /> */}
+      <UploadThumbnailImage
+        image={thumbnailImage}
+        setImage={setThumbnailImage}
       />
       <div className={styles.category}>
         <div className={styles.categoryName}>공연 제목</div>
@@ -213,10 +314,21 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
           ))}
         </ul>
       </div>
-      <AddEventDate
+      <div className={styles.category}>
+        <div className={styles.categoryName}>회차 정보</div>
+        {eventDate.map((e) => (
+          <div
+            key={e}
+            className={styles.disabled}
+          >
+            {e}
+          </div>
+        ))}
+      </div>
+      {/* <AddEventDate
         eventDate={eventDate}
         setEventDate={setEventDate}
-      />
+      /> */}
       <Label name="공연 예매 기간">
         <input
           type="date"
@@ -241,13 +353,27 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
           setValue={setDescription}
         />
       </Label>
-      <img
+      {/* <img
         src={data?.description.image}
         alt="공연 설명 첨부 이미지"
         className={styles.descriptionImage}
+      /> */}
+      <UploadDescriptionImage
+        image={descriptionImage}
+        setImage={setDesctiptionImage}
       />
+      {templateType?.includes('merchandise') && (
+      <AddMerchandise
+        merchandises={merchandises}
+        setMerchandises={setMerchandises}
+      />
+      )}
       {isUpdating ? (
-        <Loading />
+        <div>
+          <div>공연 수정 중입니다.</div>
+          <div>최대 3분까지 소요될 수 있습니다.</div>
+          <Loading />
+        </div>
       ) : (
         <Button
           onClick={handleUpdate}

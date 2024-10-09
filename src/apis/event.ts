@@ -31,7 +31,7 @@ export function updateEvent({
   return axios.put(`/${namespace}/event`, data, {
     timeout: 10000,
     headers: {
-      'Content-Type': 'multipart/form-data',
+      // 'Content-Type': 'multipart/form-data',
       Authorization: getAccessToken(),
     },
   });

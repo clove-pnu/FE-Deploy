@@ -3,8 +3,8 @@ import styles from '../styles/Input.module.css';
 interface InputProps {
   type: 'password' | 'text' | 'money' | 'date' | 'textbox',
   name: string;
-  value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  value: string | number;
+  setValue: React.Dispatch<React.SetStateAction<string | number>>;
 }
 
 export default function Input({

@@ -1,15 +1,13 @@
-import { useState } from 'react';
 import { validImageSize, validImageType } from '../../utils/image';
 import styles from '../styles/UploadThumbnailImage.module.css';
 import { Image } from '../../utils/type';
 
 interface UploadThumbnailImageProps {
+  image: Image;
   setImage: React.Dispatch<React.SetStateAction<Image>>;
 }
 
-export default function UploadThumbnailImage({ setImage }: UploadThumbnailImageProps) {
-  const [imageURL, setImageURL] = useState<string>(null);
-
+export default function UploadThumbnailImage({ image, setImage }: UploadThumbnailImageProps) {
   const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList && fileList.length > 0) {
@@ -28,16 +26,16 @@ export default function UploadThumbnailImage({ setImage }: UploadThumbnailImageP
       setImage({
         data: fileList[0],
         ext: fileList[0].type.split('/')[1],
+        url,
       });
-      setImageURL(url);
     }
   };
 
   return (
     <div className={styles.container}>
-      {imageURL && (
+      {image?.url && (
       <img
-        src={imageURL}
+        src={image?.url}
         alt="썸네일 이미지 미리보기"
         className={styles.thumbnail}
       />

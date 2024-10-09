@@ -1,15 +1,13 @@
-import { useState } from 'react';
 import { validImageSize, validImageType } from '../../utils/image';
 import styles from '../styles/UploadDescriptionImage.module.css';
 import { Image } from '../../utils/type';
 
 interface UploadDescriptionImageProps {
+  image: Image;
   setImage: React.Dispatch<React.SetStateAction<Image>>;
 }
 
-export default function UploadDescriptionImage({ setImage }: UploadDescriptionImageProps) {
-  const [imageURL, setImageURL] = useState<string>(null);
-
+export default function UploadDescriptionImage({ image, setImage }: UploadDescriptionImageProps) {
   const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
 
@@ -27,14 +25,13 @@ export default function UploadDescriptionImage({ setImage }: UploadDescriptionIm
       setImage({
         data: fileList[0],
         ext: fileList[0].type.split('/')[1],
+        url,
       });
-      setImageURL(url);
     }
   };
 
   const handleRemoveImage = () => {
     setImage(null);
-    setImageURL(null);
   };
 
   return (
@@ -53,11 +50,11 @@ export default function UploadDescriptionImage({ setImage }: UploadDescriptionIm
           accept="image/jpeg, image/png, image/webp, image/gif"
         />
       </label>
-      {imageURL
+      {image?.url
       && (
       <div className={styles.imageContainer}>
         <img
-          src={imageURL}
+          src={image?.url}
           alt="공연 설명 이미지 미리보기"
           className={styles.image}
         />

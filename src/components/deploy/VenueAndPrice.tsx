@@ -113,9 +113,7 @@ export default function VenueAndPrice({
                                 const newMap = new Map(prev);
                                 newMap.set(sectionName, {
                                   ...prev.get(sectionName),
-                                  count: isStanding
-                                    ? Number(value)
-                                    : Math.min(Number(value), sectionTotalSeatCount),
+                                  count: Math.min(Number(value), sectionTotalSeatCount),
                                 });
                                 return newMap;
                               });
