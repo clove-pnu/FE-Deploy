@@ -111,7 +111,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     }
 
     setIsUpdating(true);
-    let flag = false;
+    let flag = true;
 
     await fetchWithHandler(() => updateService({
       namespace,
@@ -126,101 +126,92 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     });
 
     if (flag) {
-      alert('공연 수정이 완료되었습니다.');
+      const formData = new FormData();
 
-      window.location.href = process.env.NODE_ENV === 'production'
-        ? 'http://cse.ticketclove.com/page/main/owner'
-        : 'http://localhost:3000/page/main/owner';
+      await sleep(90000);
+
+      const merchandiseData = merchandises.map((m) => ({
+        name: m.name,
+        price: m.price,
+        count: m.count,
+      }));
+
+      console.log(merchandiseData);
+
+      let eventData: any;
+
+      if (templateType?.includes('merchandise')) {
+        eventData = {
+          name: data?.name,
+          cast,
+          venue: data?.venue,
+          eventTime: eventDate,
+          startDate: eventDate[0].split(' ')[0],
+          endDate: eventDate[eventDate.length - 1].split(' ')[0],
+          bookingStartDate,
+          bookingEndDate,
+          description: {
+            text: description.split('\n'),
+          },
+          seatsAndPrices: data?.seatsAndPrices,
+          merches: merchandiseData,
+        };
+        console.log(eventData);
+      } else {
+        eventData = {
+          name: data?.name,
+          cast,
+          venue: data?.venue,
+          startDate: eventDate[0].split(' ')[0],
+          endDate: eventDate[eventDate.length - 1].split(' ')[0],
+          bookingStartDate,
+          bookingEndDate,
+          eventTime: eventDate,
+          description: {
+            text: description.split('\n'),
+          },
+          seatsAndPrices: data?.seatsAndPrices,
+        };
+        console.log(eventData);
+      }
+
+      // console.log(eventData);
+      const eventDataJson = JSON.stringify(eventData);
+
+      formData.append('event', new Blob([eventDataJson], { type: 'application/json' }), 'venue.json');
+      formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
+      formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
+
+      if (templateType?.includes('merchandise')) {
+        merchandises.forEach((m, i) => {
+          formData.append('merchImages', m.image.data, `merch-${i}.${m.image.ext}`);
+        });
+      }
+
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
+
+      await fetchWithHandler(() => updateEvent({
+        data: formData,
+        namespace,
+        eventName: data?.name,
+      }), {
+        onSuccess: () => {
+          alert('공연 수정이 완료되었습니다.');
+
+          window.location.href = process.env.NODE_ENV === 'production'
+            ? 'http://cse.ticketclove.com/page/main/owner'
+            : 'http://localhost:3000/page/main/owner';
+        },
+        onError: (error) => {
+          alert('공연 수정에 실패했습니다.');
+          console.error(error);
+        },
+      });
     } else {
       alert('공연 수정에 실패했습니다.');
     }
-
-    // if (flag) {
-    //   const formData = new FormData();
-
-    //   await sleep(90000);
-
-    //   const merchandiseData = merchandises.map((m) => ({
-    //     name: m.name,
-    //     price: m.price,
-    //     count: m.count,
-    //   }));
-
-    //   console.log(merchandiseData);
-
-    //   let eventData: any;
-
-    //   if (templateType?.includes('merchandise')) {
-    //     eventData = {
-    //       name: data?.name,
-    //       cast,
-    //       venue: data?.venue,
-    //       eventTime: eventDate,
-    //       startDate: eventDate[0].split(' ')[0],
-    //       endDate: eventDate[eventDate.length - 1].split(' ')[0],
-    //       bookingStartDate,
-    //       bookingEndDate,
-    //       description: {
-    //         text: description.split('\n'),
-    //       },
-    //       seatsAndPrices: data?.seatsAndPrices,
-    //       merches: merchandiseData,
-    //     };
-    //     console.log(eventData);
-    //   } else {
-    //     eventData = {
-    //       name: data?.name,
-    //       cast,
-    //       venue: data?.venue,
-    //       startDate: eventDate[0].split(' ')[0],
-    //       endDate: eventDate[eventDate.length - 1].split(' ')[0],
-    //       bookingStartDate,
-    //       bookingEndDate,
-    //       eventTime: eventDate,
-    //       description: {
-    //         text: description.split('\n'),
-    //       },
-    //       seatsAndPrices: data?.seatsAndPrices,
-    //     };
-    //     console.log(eventData);
-    //   }
-
-    //   // console.log(eventData);
-    //   const eventDataJson = JSON.stringify(eventData);
-
-    //   formData.append('event', new Blob([eventDataJson], { type: 'application/json' }), 'venue.json');
-    //   formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
-    //   formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
-
-    //   if (templateType?.includes('merchandise')) {
-    //     merchandises.forEach((m, i) => {
-    //       formData.append('merchImages', m.image.data, `merch-${i}.${m.image.ext}`);
-    //     });
-    //   }
-
-    //   formData.forEach((value, key) => {
-    //     console.log(key, value);
-    //   });
-
-    //   await fetchWithHandler(() => updateEvent({
-    //     data: formData,
-    //     namespace,
-    //   }), {
-    //     onSuccess: () => {
-    //       alert('공연 수정이 완료되었습니다.');
-
-    //       window.location.href = process.env.NODE_ENV === 'production'
-    //         ? 'http://cse.ticketclove.com/page/main/owner'
-    //         : 'http://localhost:3000/page/main/owner';
-    //     },
-    //     onError: (error) => {
-    //       alert('공연 수정에 실패했습니다.');
-    //       console.error(error);
-    //     },
-    //   });
-    // } else {
-    //   alert('공연 수정에 실패했습니다.');
-    // }
 
     setIsUpdating(false);
   };

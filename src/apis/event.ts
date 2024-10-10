@@ -24,11 +24,13 @@ export function deployEvent({
 export function updateEvent({
   data,
   namespace,
+  eventName,
 }: {
   data: FormData;
   namespace: string;
+  eventName: string;
 }) {
-  return axios.put(`/${namespace}/event`, data, {
+  return axios.put(`/${namespace}/event/${encodeURIComponent(eventName)}`, data, {
     timeout: 10000,
     headers: {
       // 'Content-Type': 'multipart/form-data',
