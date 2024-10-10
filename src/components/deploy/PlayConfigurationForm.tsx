@@ -111,7 +111,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     }
 
     setIsUpdating(true);
-    let flag = true;
+    let flag = false;
 
     await fetchWithHandler(() => updateService({
       namespace,
