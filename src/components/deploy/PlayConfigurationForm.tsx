@@ -3,7 +3,7 @@ import Label from '../common/Label';
 import Input from '../common/Input';
 import Button from '../common/Button';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
-import { getEvent, updateEvent } from '../../apis/event';
+import { deployEvent, getEvent, updateEvent } from '../../apis/event';
 import styles from '../styles/PlayConfigurationForm.module.css';
 import { getTemplateList } from '../../apis/template';
 import { Image, Merchandise, Template } from '../../utils/type';
@@ -153,7 +153,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
           description: {
             text: description.split('\n'),
           },
-          seatsAndPrices: data?.seatsAndPrices,
+          // seatsAndPrices: data?.seatsAndPrices,
           merches: merchandiseData,
         };
         console.log(eventData);
@@ -170,7 +170,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
           description: {
             text: description.split('\n'),
           },
-          seatsAndPrices: data?.seatsAndPrices,
+          // seatsAndPrices: data?.seatsAndPrices,
         };
         console.log(eventData);
       }
@@ -192,10 +192,9 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
         console.log(key, value);
       });
 
-      await fetchWithHandler(() => updateEvent({
+      await fetchWithHandler(() => deployEvent({
         data: formData,
         namespace,
-        eventName: data?.name,
       }), {
         onSuccess: () => {
           alert('공연 수정이 완료되었습니다.');

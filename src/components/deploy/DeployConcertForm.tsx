@@ -135,9 +135,12 @@ export default function DeployConcertForm({
       formData.append('event', new Blob([eventDataJson], { type: 'application/json' }), 'venue.json');
       formData.append('descriptionImage', descriptionImage.data, `description.${descriptionImage.ext}`);
       formData.append('image', thumbnailImage.data, `thumbnail.${thumbnailImage.ext}`);
-      merchandises.forEach((m, i) => {
-        formData.append('merchImages', m.image.data, `merch-${i}.${m.image.ext}`);
-      });
+
+      if (templateType?.includes('merchandise')) {
+        merchandises.forEach((m, i) => {
+          formData.append('merchImages', m.image.data, `merch-${i}.${m.image.ext}`);
+        });
+      }
 
       formData.forEach((value, key) => {
         console.log(key, value);
