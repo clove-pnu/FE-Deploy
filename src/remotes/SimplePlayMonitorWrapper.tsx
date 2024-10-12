@@ -5,7 +5,7 @@ import Loading from '../components/common/Loading';
 
 interface Props {
   namespace: string;
-  seatData: any;
+  eventName: string;
 }
 
 interface State {
@@ -36,15 +36,14 @@ class SimplePlayMonitorWrapper extends Component<Props, State> {
     }
 
     const {
-      namespace,
-      seatData,
+      namespace, eventName,
     } = this.props;
 
     return (
       <Suspense fallback={<Loading />}>
         <SimplePlayMonitor
           namespace={namespace}
-          seatData={seatData}
+          eventName={eventName}
         />
       </Suspense>
     );

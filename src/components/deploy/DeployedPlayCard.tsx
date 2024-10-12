@@ -9,7 +9,6 @@ export default function DeployedPlayCard({
   name,
   bookingStartDate,
   bookingEndDate,
-  seatsAndPrices,
 }: DeployedPlay) {
   return (
     <div className={styles.container}>
@@ -30,7 +29,7 @@ export default function DeployedPlayCard({
           <div className={styles.simpleMonitor}>
             <SimplePlayMonitorWrapper
               namespace={namespace}
-              seatData={seatsAndPrices}
+              eventName={name}
             />
           </div>
           <div className={styles.dateInfo}>
