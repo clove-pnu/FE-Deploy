@@ -33,13 +33,18 @@ export default function UploadThumbnailImage({ image, setImage }: UploadThumbnai
 
   return (
     <div className={styles.container}>
-      {image?.url && (
-      <img
-        src={image?.url}
-        alt="썸네일 이미지 미리보기"
-        className={styles.thumbnail}
-      />
-      )}
+      {image?.url ? (
+        <img
+          src={image?.url}
+          alt="썸네일 이미지 미리보기"
+          className={styles.thumbnail}
+        />
+      )
+        : (
+          <div
+            className={styles.thumbnail}
+          />
+        )}
       <label
         htmlFor="thumbnailInput"
         className={styles.inputLabel}

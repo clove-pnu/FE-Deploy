@@ -2,6 +2,8 @@
 .sectionTitle {
   margin-bottom: 0.5rem;
   font-weight: 700;
+  /* font-size: 0.75rem; */
+  /* color: #c0c0c0; */
 }
 
 .section {
@@ -28,7 +30,7 @@
   }
 
   .section {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
 }
 

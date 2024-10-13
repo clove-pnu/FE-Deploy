@@ -14,13 +14,19 @@ export async function urlToBlob(url: string) {
       responseType: 'blob',
     });
 
-    const ext = response.headers['content-Type'].split('/')[1];
+    const ext = response.headers['content-type'].split('/')[1];
+
+    console.log(`fetching ${url} ...`);
+    console.log(response);
+    console.log(ext);
+    console.log('======');
 
     return {
       data: response.data,
       ext,
     };
   } catch (error) {
+    console.error(error);
     return null;
   }
 }

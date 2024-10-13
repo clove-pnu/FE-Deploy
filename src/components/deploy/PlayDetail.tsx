@@ -3,6 +3,7 @@ import styles from '../styles/PlayDetail.module.css';
 import { fetchWithHandler } from '../../utils/fetchWithHandler';
 import { getEvent } from '../../apis/event';
 import { NumberToMoney } from '../../utils/convert';
+import { getSeat } from '../../apis/seat';
 
 interface PlayDetailProps {
   namespace: string;
@@ -10,6 +11,7 @@ interface PlayDetailProps {
 
 export default function PlayDetail({ namespace }: PlayDetailProps) {
   const [data, setData] = useState(null);
+  const [seatData, setSeatData] = useState(null);
 
   useEffect(() => {
     fetchWithHandler(() => getEvent(namespace), {
@@ -19,6 +21,28 @@ export default function PlayDetail({ namespace }: PlayDetailProps) {
       onError: () => {},
     });
   }, [namespace]);
+
+  useEffect(() => {
+    if (data) {
+      fetchWithHandler(() => getSeat(namespace), {
+        onSuccess: (response) => {
+          const result = response.data.filter((s) => s.eventName === data.name);
+
+          const sectionList = [...new Set([...result.map((r) => r.section)])];
+          setSeatData(sectionList.map((s, i) => {
+            const { price } = result.find((r) => r.section === s);
+
+            return {
+              id: i,
+              section: s,
+              price,
+            };
+          }));
+        },
+        onError: () => {},
+      });
+    }
+  }, [namespace, data]);
 
   if (!data) {
     return (
@@ -39,6 +63,12 @@ export default function PlayDetail({ namespace }: PlayDetailProps) {
         <div className={styles.section}>
           <div className={styles.sectionTitle}>공연 이름</div>
           <div>{data?.name}</div>
+        </div>
+        <div className={styles.wrapper}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>사용한 템플릿</div>
+            <div>{data?.template}</div>
+          </div>
         </div>
         <div className={styles.wrapper}>
           <div className={styles.section}>
@@ -82,7 +112,7 @@ export default function PlayDetail({ namespace }: PlayDetailProps) {
           <div className={styles.section}>
             <div className={styles.sectionTitle}>좌석 별 가격 정보</div>
             <ul>
-              {data?.seatsAndPrices.map(({ id: sectionId, section, price }) => (
+              {seatData?.map(({ id: sectionId, section, price }) => (
                 <li
                   key={sectionId}
                   className={styles.list}

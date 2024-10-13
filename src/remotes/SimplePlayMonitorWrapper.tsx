@@ -28,11 +28,7 @@ class SimplePlayMonitorWrapper extends Component<Props, State> {
     const { hasError } = this.state;
 
     if (hasError) {
-      return (
-        <div>
-          오류가 발생했습니다. 잠시 후 시도해주세요.
-        </div>
-      );
+      return null;
     }
 
     const {

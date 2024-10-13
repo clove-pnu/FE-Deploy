@@ -28,11 +28,12 @@
   gap: 2rem;
   border-bottom: 2px solid black;
   align-items: center;
-  padding: 1rem 0.5rem;
+  width: 100%;
 }
 
 .categoryName {
   font-weight: 700;
+  padding: 1rem 0.5rem;
 }
 
 .priceList {
@@ -60,4 +61,5 @@
 
 .disabled {
   color: #b0b0b0;
+  padding: 1rem 0.5rem;
 }

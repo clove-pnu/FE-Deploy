@@ -15,6 +15,7 @@ import { createNamespace } from '../../apis/deploy';
 import { sleep } from '../../utils/delay';
 import Loading from '../common/Loading';
 import AddMerchandise from './AddMerchandise';
+import { REGEX_ALPHA_UNDER_NUMBER_DASH } from '../../utils/regex';
 
 interface DeployConcertFormProps {
   templateName: string;
@@ -99,6 +100,7 @@ export default function DeployConcertForm({
           name: title,
           cast,
           venue,
+          template: templateName,
           eventTime: eventDate,
           startDate: eventDate[0].split(' ')[0],
           endDate: eventDate[eventDate.length - 1].split(' ')[0],
@@ -116,6 +118,7 @@ export default function DeployConcertForm({
           name: title,
           cast,
           venue,
+          template: templateName,
           startDate: eventDate[0].split(' ')[0],
           endDate: eventDate[eventDate.length - 1].split(' ')[0],
           bookingStartDate,
@@ -189,6 +192,7 @@ export default function DeployConcertForm({
           name="공연 식별자"
           value={namespace}
           setValue={setNamespace}
+          regex={REGEX_ALPHA_UNDER_NUMBER_DASH}
         />
       </Label>
       <Label name="출연진">

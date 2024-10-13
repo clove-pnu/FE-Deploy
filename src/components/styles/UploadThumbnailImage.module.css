@@ -1,14 +1,9 @@
+/* All */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-}
-
-.thumbnail {
-  height: 40rem;
-  width: 30rem;
-  object-fit: cover;
 }
 
 .inputLabel {
@@ -26,4 +21,24 @@
   opacity: 0;
   height: 0;
   width: 0;
+}
+
+/* Mobile */
+@media (width < 1024px) {
+  .thumbnail {
+    height: 40rem;
+    width: 30rem;
+    object-fit: cover;
+    background-color: #c0c0c080;
+  }
+}
+
+/* Desktop */
+@media (width >= 1024px) {
+  .thumbnail {
+    height: 24rem;
+    width: 18rem;
+    object-fit: cover;
+    background-color: #c0c0c080;
+  }
 }

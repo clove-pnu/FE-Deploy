@@ -48,6 +48,8 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
         setBookingEndDate(response.data[0].bookingEndDate);
         setDescription(response.data[0].description.text.join('\n'));
 
+        setSelectedTemplate(response.data[0].template);
+
         if (response.data[0].image && response.data[0].description.image) {
           const thumbnailData = await urlToBlob(response.data[0].image);
           const descriptionImageData = await urlToBlob(response.data[0].description.image);
@@ -99,6 +101,12 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     });
   }, [namespace]);
 
+  useEffect(() => {
+    if (templateList.length > 0 && selectedTemplate !== '') {
+      setTemplateType(templateList.find((t) => t[0] === selectedTemplate)[1].type);
+    }
+  }, [namespace, templateList, selectedTemplate]);
+
   const handleUpdate = async () => {
     if (!(cast
       && eventDate.length > 0
@@ -113,22 +121,28 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
     setIsUpdating(true);
     let flag = false;
 
-    await fetchWithHandler(() => updateService({
-      namespace,
-      templateName: selectedTemplate,
-    }), {
-      onSuccess: () => {
-        flag = true;
-      },
-      onError: (error) => {
-        console.error(error);
-      },
-    });
+    if (data.template !== selectedTemplate) {
+      await fetchWithHandler(() => updateService({
+        namespace,
+        templateName: selectedTemplate,
+      }), {
+        onSuccess: () => {
+          flag = true;
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      });
+    } else {
+      flag = true;
+    }
 
     if (flag) {
       const formData = new FormData();
 
-      await sleep(90000);
+      if (data.template !== selectedTemplate) {
+        await sleep(90000);
+      }
 
       const merchandiseData = merchandises.map((m) => ({
         name: m.name,
@@ -145,6 +159,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
           name: data?.name,
           cast,
           venue: data?.venue,
+          template: selectedTemplate,
           eventTime: eventDate,
           startDate: eventDate[0].split(' ')[0],
           endDate: eventDate[eventDate.length - 1].split(' ')[0],
@@ -162,6 +177,7 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
           name: data?.name,
           cast,
           venue: data?.venue,
+          template: selectedTemplate,
           startDate: eventDate[0].split(' ')[0],
           endDate: eventDate[eventDate.length - 1].split(' ')[0],
           bookingStartDate,
@@ -237,7 +253,6 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
       <select
         onChange={(e) => {
           setSelectedTemplate(e.target.value);
-          setTemplateType(templateList.find((t) => t[0] === e.target.value)[1].type);
         }}
         value={selectedTemplate}
       >
@@ -287,14 +302,11 @@ export default function PlayConfigurationForm({ namespace }: PlayConfigurationFo
       </div>
       <div className={styles.category}>
         <div className={styles.categoryName}>좌석 별 가격</div>
-        <ul className={styles.priceList}>
+        <ul className={`${styles.priceList} ${styles.disabled}`}>
           {data?.seatsAndPrices && data?.seatsAndPrices.map(({
             id, section, price,
           }) => (
-            <li
-              key={id}
-              className={styles.disabled}
-            >
+            <li key={id}>
               {section}
               {' '}
               구역:

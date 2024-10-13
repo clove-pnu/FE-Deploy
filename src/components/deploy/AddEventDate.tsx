@@ -23,12 +23,13 @@ export default function AddEventDate({ eventDate, setEventDate }: AddEventDatePr
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <Label name="공연 회차 정보">
         <input
           type="datetime-local"
           value={addEventDate}
           onChange={(e) => setAddEventDate(e.target.value)}
+          className={styles.input}
         />
         <button
           type="button"

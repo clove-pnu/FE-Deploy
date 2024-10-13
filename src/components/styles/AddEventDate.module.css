@@ -1,3 +1,7 @@
+.container {
+  width: 480px;
+}
+
 .eventDateList {
   display: flex;
   flex-direction: column;
@@ -18,4 +22,9 @@
   outline: none;
   border: 0;
   padding: 0.25rem;
+}
+
+.input {
+  flex-grow: 1;
+  justify-self: center;
 }

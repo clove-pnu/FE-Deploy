@@ -25,6 +25,8 @@
 .input {
   border: 0;
   outline: none;
+  flex-grow: 1;
+  text-align: right;
 }
 
 .inputContainer {
