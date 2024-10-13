@@ -5,6 +5,7 @@ interface InputProps {
   name: string;
   value: string | number;
   setValue: React.Dispatch<React.SetStateAction<string | number>>;
+  regex?: RegExp;
 }
 
 export default function Input({
@@ -12,6 +13,7 @@ export default function Input({
   name,
   value,
   setValue,
+  regex,
 }: InputProps) {
   const handleTextareaResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.currentTarget.style.height = 'auto';
@@ -58,7 +60,15 @@ export default function Input({
       name={name}
       id={name}
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => {
+        if (regex) {
+          if (regex.test(e.target.value)) {
+            setValue(e.target.value);
+          }
+        } else {
+          setValue(e.target.value);
+        }
+      }}
     />
   );
 }
